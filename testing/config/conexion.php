@@ -18,8 +18,8 @@ $tInfo = "usuarios_informacion";
 //Tablas Bancos
 $tNivEsc = "banco_niveles_escolares";
 $tTurn = "banco_nivel_turnos";
-$tGrade = "banco_nivel_grados";
-$tMat = "banco_materias";
+$tGrade = "banco_niveles_grados";
+$tMats = "banco_materias";
 
 $tPlanEst = "planes_estudios";
 ?>
