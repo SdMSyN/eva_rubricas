@@ -4,7 +4,8 @@
     $tit = "Plataforma de Evaluación Continua | P.E.C. ";
     $dateNow = date("Y-m-d");
     $timeNow = date("H:i");
-		$dataTimeNow = date("Y-m-d H:i");
+    $dataTimeNow = date("Y-m-d H:i");
+    $year = date("Y");
     $folderUpPerfil = "../uploads/perfil/";
 	
 ?>
