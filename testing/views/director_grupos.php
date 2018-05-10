@@ -47,6 +47,12 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="form-group">
+                                        <label for="inputPE" class="col-sm-3 control-label">Plan de Estudios</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="inputPE" name="inputPE" required> </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="inputName" class="col-sm-3 control-label">Nombre (Completo)</label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" id="inputName" name="inputName" required>
@@ -85,11 +91,17 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Editar Plan de Estudios</h4>
+                                    <h4 class="modal-title">Editar Grupo</h4>
                                     <p class="divError"></p>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="text" id="inputIdPlan" name="inputIdPlan" >
+                                    <input type="text" id="inputIdGrupo" name="inputIdGrupo" >
+                                    <div class="form-group">
+                                        <label for="inputPE" class="col-sm-3 control-label">Plan de Estudios</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="inputPE" name="inputPE" required> </select>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label for="inputName" class="col-sm-3 control-label">Nombre (Completo)</label>
                                         <div class="col-sm-9">
@@ -97,9 +109,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputYear" class="col-sm-3 control-label">Año</label>
+                                        <label for="inputGrado" class="col-sm-3 control-label">Grado</label>
                                         <div class="col-sm-9">
-                                            <input type="number" class="form-control" id="inputYear" name="inputYear" value="2018" max="2018" required>
+                                            <select class="form-control" id="inputGrado" name="inputGrado" required> </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputTurno" class="col-sm-3 control-label">Turno</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="inputTurno" name="inputTurno" required>
+                                                <option value="1">Matutino</option>
+                                                <option value="2">Vespertino</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div><!-- ./modal-body -->
@@ -128,10 +149,10 @@
                                     <table class="table table-striped table-bordered" id="data">
                                         <thead>
                                             <tr>
-                                                <th><span title="namePlanEst">Nombre</span></th>
-                                                <th><span title="yearPlanEst">Grado</span></th>
-                                                <th><span title="yearPlanEst">Turno</span></th>
-                                                <th><span title="yearPlanEst">Año</span></th>
+                                                <th><span title="grupo">Nombre</span></th>
+                                                <th><span title="grado">Grado</span></th>
+                                                <th><span title="turno">Turno</span></th>
+                                                <th><span title="year">Año</span></th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -179,6 +200,30 @@
                     }
                 })
                 
+                //Obtenemos los planes de estudio
+                $.ajax({
+                    type: "POST",
+                    url: "../controllers/get_planes_estudio.php",
+                    success: function (msg) {
+                        console.log(msg);
+                        var msg = jQuery.parseJSON(msg);
+                        if (msg.error == 0) {
+                            $("#modalAddGroup .modal-body #inputPE").html("");
+                            $.each(msg.dataRes, function (i, item) {
+                                $("#modalAddGroup .modal-body #inputPE").append($('<option>', {
+                                    value: msg.dataRes[i].id,
+                                    text: msg.dataRes[i].nombre
+                                }));
+                            });
+                        } else {
+                            $("#modalAddGroup .modal-body #inputPE").append($('<option>', {
+                                value: 0,
+                                text: "No existen planes de estudio"
+                            }));
+                        }
+                    }
+                })
+                
                 filtrar();
                 function filtrar() {
                     $(".loader").show();
@@ -200,7 +245,7 @@
                                             + '<td><div class="btn-group pull-right dropdown">'
                                             + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >Acciones <span class="fa fa-caret-down"></span></button>'
                                             + '<ul class="dropdown-menu">'
-                                            + '<li><a href="director_plan_estudio.php?action=viewDetails&route=viewDirection&pln=17' + msg.dataRes[i].id + '&id=256&idUser=512"><i class="fa fa-eye"></i> Ver</a></li>'
+                                            + '<li><a href="#"><i class="fa fa-eye"></i> Ver</a></li>'
                                             + '<li><a href="#" data-toggle="modal" data-target="#modalUpdPlanEst" id="editar" data-value="' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Editar</a></li>';
                                             + '</ul></div></td>'
                                             + '</tr>';
@@ -253,7 +298,7 @@
                     $.ajax({
                         type: "POST",
                         data: {orderby: ordenar, query: consulta},
-                        url: "../controllers/get_planes_estudio.php",
+                        url: "../controllers/get_grupos.php",
                         success: function (msg) {
                             console.log(msg);
                             var msg = jQuery.parseJSON(msg);
@@ -261,12 +306,14 @@
                                 $("#data tbody").html("");
                                 $.each(msg.dataRes, function (i, item) {
                                     var newRow = '<tr>'
-                                            + '<td><a href="director_plan_estudio.php?action=viewDetails&route=viewDirection&pln=17' + msg.dataRes[i].id + '&id=256&idUser=512">' + msg.dataRes[i].nombre + '</a></td>'
+                                            + '<td>' + msg.dataRes[i].grupo + '</td>'
+                                            + '<td>' + msg.dataRes[i].grado + '</td>'
+                                            + '<td>' + msg.dataRes[i].turno + '</td>'
                                             + '<td>' + msg.dataRes[i].year + '</td>'
                                             + '<td><div class="btn-group pull-right dropdown">'
                                             + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >Acciones <span class="fa fa-caret-down"></span></button>'
                                             + '<ul class="dropdown-menu">'
-                                            + '<li><a href="director_plan_estudio.php?action=viewDetails&route=viewDirection&pln=17' + msg.dataRes[i].id + '&id=256&idUser=512"><i class="fa fa-eye"></i> Ver</a></li>'
+                                            + '<li><a href="#"><i class="fa fa-eye"></i> Ver</a></li>'
                                             + '<li><a href="#" data-toggle="modal" data-target="#modalUpdPlanEst" id="editar" data-value="' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Editar</a></li>';
                                             + '</ul></div></td>'
                                             + '</tr>';
@@ -351,11 +398,15 @@
             form1.validate({
                 ignore: "",
                 rules: {
+                    inputPE: {required: true},
                     inputName: {required: true, maxlength: 9},
                     inputGrado: {required: true},
                     inputTurno: {required: true}
                 },
                 messages: {
+                    inputPE: {
+                        required: "Plan de Estudios obligatorio"
+                    },
                     inputName: {
                         required: "Nombre del plan, obligatorio",
                         maxlength: "Máximo 9 caracteres"
