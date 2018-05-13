@@ -85,8 +85,8 @@
                 <!-- fin modal -->
 
                 <!-- modal editar plan de estudio -->
-                <form class="form-horizontal" id="formUpdPlanEst" name="formUpdPlanEst">
-                    <div class="modal fade" id="modalUpdPlanEst" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                <form class="form-horizontal" id="formUpdGroup" name="formUpdGroup">
+                    <div class="modal fade" id="modalUpdGroup" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -95,7 +95,7 @@
                                     <p class="divError"></p>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="text" id="inputIdGrupo" name="inputIdGrupo" >
+                                    <input type="hidden" id="inputIdGrupo" name="inputIdGrupo" >
                                     <div class="form-group">
                                         <label for="inputPE" class="col-sm-3 control-label">Plan de Estudios</label>
                                         <div class="col-sm-9">
@@ -153,6 +153,7 @@
                                                 <th><span title="grado">Grado</span></th>
                                                 <th><span title="turno">Turno</span></th>
                                                 <th><span title="year">Año</span></th>
+                                                <th><span title="planEst">Plan de Estudios</span></th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -185,14 +186,23 @@
                         var msg = jQuery.parseJSON(msg);
                         if (msg.error == 0) {
                             $("#modalAddGroup .modal-body #inputGrado").html("");
+                            $("#modalUpdGroup .modal-body #inputGrado").html("");
                             $.each(msg.dataRes, function (i, item) {
                                 $("#modalAddGroup .modal-body #inputGrado").append($('<option>', {
+                                    value: msg.dataRes[i].id,
+                                    text: msg.dataRes[i].nombre
+                                }));
+                                $("#modalUpdGroup .modal-body #inputGrado").append($('<option>', {
                                     value: msg.dataRes[i].id,
                                     text: msg.dataRes[i].nombre
                                 }));
                             });
                         } else {
                             $("#modalAddGroup .modal-body #inputGrado").append($('<option>', {
+                                value: 0,
+                                text: "No existen grados en tu nivel Escolar"
+                            }));
+                            $("#modalUpdGroup .modal-body #inputGrado").append($('<option>', {
                                 value: 0,
                                 text: "No existen grados en tu nivel Escolar"
                             }));
@@ -209,14 +219,23 @@
                         var msg = jQuery.parseJSON(msg);
                         if (msg.error == 0) {
                             $("#modalAddGroup .modal-body #inputPE").html("");
+                            $("#modalUpdGroup .modal-body #inputPE").html("");
                             $.each(msg.dataRes, function (i, item) {
                                 $("#modalAddGroup .modal-body #inputPE").append($('<option>', {
+                                    value: msg.dataRes[i].id,
+                                    text: msg.dataRes[i].nombre
+                                }));
+                                $("#modalUpdGroup .modal-body #inputPE").append($('<option>', {
                                     value: msg.dataRes[i].id,
                                     text: msg.dataRes[i].nombre
                                 }));
                             });
                         } else {
                             $("#modalAddGroup .modal-body #inputPE").append($('<option>', {
+                                value: 0,
+                                text: "No existen planes de estudio"
+                            }));
+                            $("#modalUpdGroup .modal-body #inputPE").append($('<option>', {
                                 value: 0,
                                 text: "No existen planes de estudio"
                             }));
@@ -242,11 +261,12 @@
                                             + '<td>' + msg.dataRes[i].grado + '</td>'
                                             + '<td>' + msg.dataRes[i].turno + '</td>'
                                             + '<td>' + msg.dataRes[i].year + '</td>'
+                                            + '<td>' + msg.dataRes[i].planEst + '</td>'
                                             + '<td><div class="btn-group pull-right dropdown">'
                                             + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >Acciones <span class="fa fa-caret-down"></span></button>'
                                             + '<ul class="dropdown-menu">'
                                             + '<li><a href="#"><i class="fa fa-eye"></i> Ver</a></li>'
-                                            + '<li><a href="#" data-toggle="modal" data-target="#modalUpdPlanEst" id="editar" data-value="' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Editar</a></li>';
+                                            + '<li><a href="#" data-toggle="modal" data-target="#modalUpdGroup" id="editar" data-value="' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Editar</a></li>';
                                             + '</ul></div></td>'
                                             + '</tr>';
                                     $(newRow).appendTo("#data tbody");
@@ -345,19 +365,18 @@
                 })
 
                 $("#data").on("click", "#editar", function () {
-                    var idPlanEst2 = $(this).data('value');
-                    console.log(idPlanEst2);
+                    var idGrupo = $(this).data('value');
+                    console.log(idGrupo);
                     $(".loader").show();
                     $.ajax({
                         type: "POST",
-                        url: "../controllers/get_planes_estudio.php",
-                        data: {ordenar: ordenar, tarea: 'editar', idPlanEst: idPlanEst2},
+                        url: "../controllers/get_grupos.php",
+                        data: {ordenar: ordenar, tarea: 'editar', idGrupo: idGrupo},
                         success: function (msg) {
                             console.log(msg);
                             var datos = jQuery.parseJSON(msg);
-                            $("#modalUpdPlanEst .modal-body #inputIdPlan").val(datos.dataRes[0].id);
-                            $("#modalUpdPlanEst .modal-body #inputName").val(datos.dataRes[0].nombre);
-                            $("#modalUpdPlanEst .modal-body #inputYear").val(datos.dataRes[0].year);
+                            $("#modalUpdGroup .modal-body #inputIdGrupo").val(datos.dataRes[0].id);
+                            $("#modalUpdGroup .modal-body #inputName").val(datos.dataRes[0].grupo);
                             $(".loader").hide();
                         },
                         error: function (x, e) {
@@ -506,23 +525,29 @@
         </script>
 
         <script>
-            var form2 = $("#formUpdPlanEst");
+            var form2 = $("#formUpdGroup");
             form2.validate({
                 ignore: "",
                 rules: {
-                    inputName: {required: true, maxlength: 90},
-                    inputYear: {required: true, digits: true, maxlength: 4}
+                    inputPE: {required: true},
+                    inputName: {required: true, maxlength: 9},
+                    inputGrado: {required: true},
+                    inputTurno: {required: true}
                 },
                 messages: {
+                    inputPE: {
+                        required: "Plan de Estudios obligatorio"
+                    },
                     inputName: {
                         required: "Nombre del plan, obligatorio",
-                        maxlength: "Máximo 90 caracteres"
+                        maxlength: "Máximo 9 caracteres"
                     },
-                    inputYear: {
-                        required: "Año del plan, obligatorio",
-                        digits: "Solo se permiten dígitos",
-                        maxlength: "Máximo 4 caracteres"
-                    }
+                    inputGrado: {
+                        required: "Grado obligatorio"
+                    },
+                    inputTurno: {
+                        required: "Turno obligatorio"
+                    },
                 },
                 errorPlacement: function (error, element) {
                     error.addClass("help-block");
@@ -545,7 +570,7 @@
                     $(element).next("span").addClass("glyphicon-ok").removeClass("glyphicon-remove");
                 }
             });
-            $("#formUpdPlanEst").submit(function (event) {
+            $("#formUpdGroup").submit(function (event) {
                 var form2 = $(this).valid();
                 var parametros = $(this).serialize();
                 if (this.hasChildNodes('.nav.nav-tabs')) {
@@ -563,7 +588,7 @@
                     $('#guardar_datos').attr("disabled", true);
                     $.ajax({
                         type: "POST",
-                        url: "../controllers/update_plan_estudios.php",
+                        url: "../controllers/update_grupos.php",
                         data: parametros,
                         success: function (msg) {
                             console.log(msg);
@@ -575,7 +600,7 @@
                                 $(".divError").html(datos.msg);
                                 setTimeout(function () {
                                     location.reload();
-                                }, 3000);
+                                }, 2000);
                             } else {
                                 $(".loader").hide();
                                 $(".divError").removeClass("bg-success");

@@ -6,10 +6,12 @@ $grupos = array();
 $msgErr = '';
 $ban = false;
 
-$sqlGetGrupo = "SELECT $tGInfo.nombre as grupo, $tTurn.nombre as turno, $tGrade.nombre as grado, $tGInfo.year as year "
+$sqlGetGrupo = "SELECT $tGInfo.id as idGrupo, $tGInfo.nombre as grupo, $tTurn.nombre as turno, "
+        . "$tGrade.nombre as grado, $tGInfo.year as year, $tPlanEst.nombre as planEst "
         . "FROM $tGInfo "
         . "INNER JOIN $tGrade ON $tGrade.id = $tGInfo.nivel_grado_id "
         . "INNER JOIN $tTurn ON $tTurn.id = $tGInfo.nivel_turno_id "
+        . "INNER JOIN $tPlanEst ON $tPlanEst.id = $tGInfo.plan_estudios_id "
         . "WHERE 1=1";
 
 $query = (isset($_POST['query'])) ? $_POST['query'] : "";
@@ -32,11 +34,14 @@ if ($vorder != '') {
 $resGetGrupo = $con->query($sqlGetGrupo);
 if ($resGetGrupo->num_rows > 0) {
     while ($rowGetGrupo = $resGetGrupo->fetch_assoc()) {
+        $id = $rowGetGrupo['idGrupo'];
         $grupo = $rowGetGrupo['grupo'];
         $turno = $rowGetGrupo['turno'];
         $grado = $rowGetGrupo['grado'];
         $year = $rowGetGrupo['year'];
-        $grupos[] = array('grupo' => $grupo, 'turno' => $turno, 'grado'=>$grado, 'year'=>$year);
+        $planEst = $rowGetGrupo['planEst'];
+        $grupos[] = array('id'=>$id, 'grupo' => $grupo, 'turno' => $turno, 
+            'grado'=>$grado, 'year'=>$year, 'planEst'=>$planEst);
         $ban = true;
         $msgErr = 'Grupos hallados.';
     }
