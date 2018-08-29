@@ -30,9 +30,7 @@
                     <div class="col-xs-4"></div>
                     <div class="col-xs-5 ">
                         <div class="btn-group pull-right">
-                            <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modalAddGroup"><i class="fa fa-plus"></i> Nuevo</a>
-                            <!-- <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Mostrar <span class="caret"></span>
-                            </button> -->
+                            
                         </div>
                     </div>
                 </div>
@@ -213,35 +211,33 @@
                 $("#data").on("click", "#viewMats", function(){
                     var idGrupo = $(this).val();
                     console.log(idGrupo);
-                    /*$.ajax({
+                    $.ajax({
                         type: "POST",
                         data: {idGrupo: idGrupo},
-                        url: "../controllers/get_grupo_materias.php",
+                        url: "../controllers/get_grupos_mat_prof.php",
                         success: function(msg){
                             var msg = jQuery.parseJSON(msg);
                             if(msg.error == 0){
                                 var newRow = '';
                                 $("#modalViewMats .matsProfs tbody").html("");
-                                //$("#modalAddMat #inputGrupo").val(idGrupo);
                                 $("#modalViewMats #addMat").data("whatever", idGrupo);
                                 $.each(msg.dataRes, function(i, item){
                                     newRow += '<tr>';
-                                        newRow += '<td>'+msg.dataRes[i].nameMat+'</td>';
-                                        newRow += '<td>'+msg.dataRes[i].nameProf+'</td>';
+                                        newRow += '<td>'+msg.dataRes[i].materia+'</td>';
+                                        newRow += '<td>'+msg.dataRes[i].profesor+'</td>';
                                         newRow += '<td>'
                                                 +'<button type="button" class="btn btn-primary" id="updMat" data-whatever="'+msg.dataRes[i].idMatProf+'" data-grupo="'+idGrupo+'" data-toggle="modal" data-target="#modalUpdMat">'
                                                     +'Actualizar materia'
                                                 +'</button></td>';
                                     newRow += '</tr>';
                                 });
-                                //$("#modalViewMats .matsProfs tbody").html(newRow);
                                 $(newRow).appendTo("#modalViewMats .matsProfs tbody");
                             }else{
                                 var newRow = '<tr><td>'+msg.msgErr+'</td></tr>';
                                 $(newRow).appendTo("#modalViewMats .matsProfs tbody");
                             }
                         }
-                    });*/
+                    });
                 });
             
             });
