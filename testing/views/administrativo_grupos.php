@@ -45,10 +45,8 @@
                                 <p class="divError"></p>
                             </div>
                             <div class="modal-body">
-                                <div class="row text-center">
-                                    <button type="button" class="btn btn-primary" id="addMat" data-toggle="modal" data-target="#modalAddMat">
-                                        Asignar materia
-                                    </button>
+                                <div class="row text-center buttonAddMat">
+                                    
                                 </div>
                                 <br>
                                 <table class="table table-striped matsProfs">
@@ -74,11 +72,7 @@
                                 <p class="divError"></p>
                             </div>
                             <div class="modal-body">
-                                <div class="row text-center">
-                                    <button type="button" class="btn btn-primary" id="addMat" data-toggle="modal" data-target="#modalAddMat">
-                                        Asignar materia
-                                    </button>
-                                </div>
+                                <div class="row text-center buttonAddMat"></div>
                                 <br>
                                 <table class="table table-striped matsProfs">
                                     <thead>
@@ -210,6 +204,8 @@
                 //Cargar materias a ventana modal
                 $("#data").on("click", "#viewMats", function(){
                     var idGrupo = $(this).val();
+                    //$("#modalViewMats #addMat .buttonAddMat").data("whatever", idGrupo);
+                    $("#modalViewMats .buttonAddMat").html('<button type="button" class="btn btn-danger" id="addMat" data-toggle="modal" data-target="#modalAddMat" data-whatever="'+idGrupo+'" >Asignar materia</button>');
                     console.log(idGrupo);
                     $.ajax({
                         type: "POST",
@@ -217,10 +213,9 @@
                         url: "../controllers/get_grupos_mat_prof.php",
                         success: function(msg){
                             var msg = jQuery.parseJSON(msg);
+                            $("#modalViewMats .matsProfs tbody").html("");
                             if(msg.error == 0){
                                 var newRow = '';
-                                $("#modalViewMats .matsProfs tbody").html("");
-                                $("#modalViewMats #addMat").data("whatever", idGrupo);
                                 $.each(msg.dataRes, function(i, item){
                                     newRow += '<tr>';
                                         newRow += '<td>'+msg.dataRes[i].materia+'</td>';
@@ -239,7 +234,12 @@
                         }
                     });
                 });
-            
+                
+                //Asignar materias
+                $("#modalViewMats").on("click", "#addMat", function(){
+                    var idGrupo = $(this).data("whatever");
+                    console.log("hola "+idGrupo);
+                });
             });
         </script>
 
