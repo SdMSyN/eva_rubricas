@@ -51,7 +51,7 @@
                                 <br>
                                 <table class="table table-striped matsProfs">
                                     <thead>
-                                        <tr><th>Nombre Materia</th><th>Nombre Profesor</th><th>Actualizar</th></tr>
+                                        <tr><th>Nombre Materia</th><th>Nombre Profesor</th><th>Actualizar</th><th></th></tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -97,6 +97,41 @@
                 </form><!-- ./form -->
                 <!-- fin modal -->
                 
+                <!-- modal actualizar asignación de materias -->
+                <form class="form-horizontal" id="formUpdMatProf" name="formUpdGroup">
+                    <div class="modal fade" id="modalUpdMatProf" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Actualizar materia</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="inputIdGrupo" name="inputIdGrupo" >
+                                    <input type="text" id="inputIdGMatProf" name="inputIdGMatProf" >
+                                    <div class="form-group">
+                                        <label for="inputMat" class="col-sm-3 control-label">Materia</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="inputMat" name="inputMat" required> </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputProf" class="col-sm-3 control-label">Profesor</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="inputProf" name="inputProf" required> </select>
+                                        </div>
+                                    </div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Actualizar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form><!-- ./form -->
+                <!-- fin modal -->
                 
             </section>
 
@@ -231,9 +266,12 @@
                                         newRow += '<td>'+msg.dataRes[i].materia+'</td>';
                                         newRow += '<td>'+msg.dataRes[i].profesor+'</td>';
                                         newRow += '<td>'
-                                                +'<button type="button" class="btn btn-primary" id="updMat" data-whatever="'+msg.dataRes[i].idMatProf+'" data-grupo="'+idGrupo+'" data-toggle="modal" data-target="#modalUpdMat">'
+                                                +'<button type="button" class="btn btn-primary" id="updMat" data-whatever="'+msg.dataRes[i].id+'" data-grupo="'+idGrupo+'" data-toggle="modal" data-target="#modalUpdMatProf">'
                                                     +'Actualizar materia'
                                                 +'</button></td>';
+                                        newRow += '<td>'
+                                                 +'<button type="button" class="btn btn-danger" id="delete" value="'+msg.dataRes[i].id+'"><span class="glyphicon glyphicon-remove"></span></button>'
+                                                  +'</td>';
                                     newRow += '</tr>';
                                 });
                                 $(newRow).appendTo("#modalViewMats .matsProfs tbody");
@@ -308,6 +346,71 @@
                     });
                 });
                 
+                //Actualizar materias
+                $("#modalViewMats").on("click", "#updMat", function(){
+                    var idGrupo = $(this).data("grupo");
+                    var idGMatProf = $(this).data("whatever");
+                    $("#modalUpdMatProf .modal-body #inputIdGrupo").val(idGrupo);
+                    $("#modalUpdMatProf .modal-body #inputIdGMatProf").val(idGMatProf);
+                    console.log("hola "+idGrupo+"-"+idGMatProf);
+                    $.ajax({
+                        type: "POST",
+                        data: {idGrupo: idGrupo},
+                        url: "../controllers/get_mats_plan_nivel.php",
+                        success: function(msg){
+                            console.log(msg);
+                            var msg = jQuery.parseJSON(msg);
+                            $("#modalUpdMatProf .modal-body #inputMat").html("");
+                            if(msg.error == 0){
+                                $.each(msg.dataRes, function (i, item) {
+                                    $("#modalUpdMatProf .modal-body #inputMat").append($('<option>', {
+                                        value: msg.dataRes[i].id,
+                                        text: msg.dataRes[i].nombre
+                                    }));
+                                });
+                                //Llenamos profesores
+                                $.ajax({
+                                    type: "POST",
+                                    url: "../controllers/get_profesores.php",
+                                    success: function(msg){
+                                        var msg = jQuery.parseJSON(msg);
+                                        $("#modalUpdMatProf .modal-body #inputProf").html("");
+                                        if(msg.error == 0){
+                                            $.each(msg.dataRes, function (i, item) {
+                                                $("#modalUpdMatProf .modal-body #inputProf").append($('<option>', {
+                                                    value: msg.dataRes[i].id,
+                                                    text: msg.dataRes[i].nombre
+                                                }));
+                                            });
+                                        }else{
+                                            $("#modalUpdMatProf .modal-body #inputProf").html(msg.msgErr);
+                                        }
+                                    }
+                                })
+                            }else{
+                                $("#modalUpdMatProf .modal-body #inputMat").html(msg.msgErr);
+                            }
+                        },
+                        error: function (x, e) {
+                            var cadErr = '';
+                            if (x.status == 0) {
+                                cadErr = '¡Estas desconectado!\n Por favor checa tu conexión a Internet.';
+                            } else if (x.status == 404) {
+                                cadErr = 'Página no encontrada.';
+                            } else if (x.status == 500) {
+                                cadErr = 'Error interno del servidor.';
+                            } else if (e == 'parsererror') {
+                                cadErr = 'Error.\nFalló la respuesta JSON.';
+                            } else if (e == 'timeout') {
+                                cadErr = 'Tiempo de respuesta excedido.';
+                            } else {
+                                cadErr = 'Error desconocido.\n' + x.responseText;
+                            }
+                            alert(cadErr);
+                        }
+                    });
+                });
+                
                 //Asignar materia y profesor
                 $('#formAddMatProf').validate({
                     rules: {
@@ -345,7 +448,73 @@
                         });
                     }
                 }); // end añadir nuevo cargo
+                
+                //Actualizar materia y profesor
+                $('#formUpdMatProf').validate({
+                    rules: {
+                        inputMat: {required: true},
+                        inputProf: {required: true}
+                    },
+                    messages: {
+                        inputMat: "Materia obligatoria",
+                        inputProf: "Profesor que impartirá la materia, obligatorio"
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/update_grupo_mat_prof.php",
+                            data: $('form#formUpdMatProf').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalUpdMatProf .divError').css({color: "#77DD77"});
+                                    $('#modalUpdMatProf .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('#modalUpdMatProf .divError').css({color: "#FF0000"});
+                                    $('#modalUpdMatProf .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al actualizar materia al grupo.");
+                            }
+                        });
+                    }
+                }); // end añadir nuevo cargo
                     
+                //Eliminar materia
+                $("#modalViewMats").on("click", "#delete", function(){
+                    var idGMatProf = $(this).val();
+                    console.log("Hola: "+idGMatProf);
+                    if(confirm("¿Seguro que deseas eliminar esta materia? Se borrará la materia y el profesor asignado")){
+                        $.ajax({
+                             method: "POST",
+                             data: {idGMatProf: idGMatProf},
+                             url: "../controllers/delete_grupo_mat_prof.php",
+                             success: function(data){
+                                console.log(data);
+                                var msg = jQuery.parseJSON(data);
+                                if(msg.error == 0){
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    setTimeout(function () {
+                                        
+                                    }, 1500);
+                                }
+                             }
+                         })
+                    }else{
+                        alert("Ten cuidado.");
+                    }
+                });
+                
             });
         </script>
 
