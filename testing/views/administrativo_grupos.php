@@ -63,28 +63,38 @@
                 <!-- fin modal -->
                 
                 <!-- modal asignar materias -->
-                <div class="modal fade" id="modalAddMatProf" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title">Ver materias</h4>
-                                <p class="divError"></p>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row text-center buttonAddMat"></div>
-                                <br>
-                                <table class="table table-striped matsProfs">
-                                    <thead>
-                                        <tr><th>Nombre Materia</th><th>Nombre Profesor</th><th>Actualizar</th></tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div><!-- ./modal-body -->
-                        </div><!-- ./modal-content -->
-                    </div><!-- ./modal-dialog -->
-                </div><!-- ./modal fade -->
+                <form class="form-horizontal" id="formAddMatProf" name="formUpdGroup">
+                    <div class="modal fade" id="modalAddMatProf" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Asignar materia</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="inputIdGrupo" name="inputIdGrupo" >
+                                    <div class="form-group">
+                                        <label for="inputMat" class="col-sm-3 control-label">Materia</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="inputMat" name="inputMat" required> </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputProf" class="col-sm-3 control-label">Profesor</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="inputProf" name="inputProf" required> </select>
+                                        </div>
+                                    </div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Asignar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form><!-- ./form -->
                 <!-- fin modal -->
                 
                 
@@ -205,7 +215,7 @@
                 $("#data").on("click", "#viewMats", function(){
                     var idGrupo = $(this).val();
                     //$("#modalViewMats #addMat .buttonAddMat").data("whatever", idGrupo);
-                    $("#modalViewMats .buttonAddMat").html('<button type="button" class="btn btn-danger" id="addMat" data-toggle="modal" data-target="#modalAddMat" data-whatever="'+idGrupo+'" >Asignar materia</button>');
+                    $("#modalViewMats .buttonAddMat").html('<button type="button" class="btn btn-danger" id="addMat" data-toggle="modal" data-target="#modalAddMatProf" data-whatever="'+idGrupo+'" >Asignar materia</button>');
                     console.log(idGrupo);
                     $.ajax({
                         type: "POST",
@@ -238,8 +248,104 @@
                 //Asignar materias
                 $("#modalViewMats").on("click", "#addMat", function(){
                     var idGrupo = $(this).data("whatever");
+                    $("#modalAddMatProf .modal-body #inputIdGrupo").val(idGrupo);
                     console.log("hola "+idGrupo);
+                    $.ajax({
+                        type: "POST",
+                        data: {idGrupo: idGrupo},
+                        url: "../controllers/get_mats_plan_nivel.php",
+                        success: function(msg){
+                            console.log(msg);
+                            var msg = jQuery.parseJSON(msg);
+                            $("#modalAddMatProf .modal-body #inputMat").html("");
+                            if(msg.error == 0){
+                                $.each(msg.dataRes, function (i, item) {
+                                    $("#modalAddMatProf .modal-body #inputMat").append($('<option>', {
+                                        value: msg.dataRes[i].id,
+                                        text: msg.dataRes[i].nombre
+                                    }));
+                                });
+                                //Llenamos profesores
+                                $.ajax({
+                                    type: "POST",
+                                    url: "../controllers/get_profesores.php",
+                                    success: function(msg){
+                                        var msg = jQuery.parseJSON(msg);
+                                        $("#modalAddMatProf .modal-body #inputProf").html("");
+                                        if(msg.error == 0){
+                                            $.each(msg.dataRes, function (i, item) {
+                                                $("#modalAddMatProf .modal-body #inputProf").append($('<option>', {
+                                                    value: msg.dataRes[i].id,
+                                                    text: msg.dataRes[i].nombre
+                                                }));
+                                            });
+                                        }else{
+                                            $("#modalAddMatProf .modal-body #inputProf").html(msg.msgErr);
+                                        }
+                                    }
+                                })
+                            }else{
+                                $("#modalAddMatProf .modal-body #inputMat").html(msg.msgErr);
+                            }
+                        },
+                        error: function (x, e) {
+                            var cadErr = '';
+                            if (x.status == 0) {
+                                cadErr = '¡Estas desconectado!\n Por favor checa tu conexión a Internet.';
+                            } else if (x.status == 404) {
+                                cadErr = 'Página no encontrada.';
+                            } else if (x.status == 500) {
+                                cadErr = 'Error interno del servidor.';
+                            } else if (e == 'parsererror') {
+                                cadErr = 'Error.\nFalló la respuesta JSON.';
+                            } else if (e == 'timeout') {
+                                cadErr = 'Tiempo de respuesta excedido.';
+                            } else {
+                                cadErr = 'Error desconocido.\n' + x.responseText;
+                            }
+                            alert(cadErr);
+                        }
+                    });
                 });
+                
+                //Asignar materia y profesor
+                $('#formAddMatProf').validate({
+                    rules: {
+                        inputMat: {required: true},
+                        inputProf: {required: true}
+                    },
+                    messages: {
+                        inputMat: "Materia obligatoria",
+                        inputProf: "Profesor que impartirá la materia, obligatorio"
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/create_grupo_mat_prof.php",
+                            data: $('form#formAddMatProf').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('.divError').css({color: "#77DD77"});
+                                    $('.divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('.divError').css({color: "#FF0000"});
+                                    $('.divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al asignar materia al grupo.");
+                            }
+                        });
+                    }
+                }); // end añadir nuevo cargo
+                    
             });
         </script>
 
