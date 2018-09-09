@@ -133,6 +133,73 @@
                 </form><!-- ./form -->
                 <!-- fin modal -->
                 
+                <!-- modal ver Alumnos/Estudiantes -->
+                <div class="modal fade" id="modalViewStudents" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Ver alumnos</h4>
+                                <p class="divError"></p>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row text-center buttonAddStudent">
+                                    
+                                </div>
+                                <br>
+                                <table class="table table-striped students">
+                                    <thead>
+                                        <tr><th>No.</th><th>Nombre</th><th>Actualizar</th><th>X</th></tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div><!-- ./modal-body -->
+                        </div><!-- ./modal-content -->
+                    </div><!-- ./modal-dialog -->
+                </div><!-- ./modal fade -->
+                <!-- fin modal -->
+                
+                <!-- modal añadir nuevo alumno -->
+                <form class="form-horizontal" id="formAddStudent" name="formUpdGroup">
+                    <div class="modal fade" id="modalAddStudent" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Añadir Alumno NUEVO</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="inputIdGrupo" name="inputIdGrupo" >
+                                    <div class="form-group">
+                                        <label for="inputAP" class="col-sm-3 control-label">Apellido Paterno</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="inputAP" name="inputAP" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputAM" class="col-sm-3 control-label">Apellido Materno</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="inputAM" name="inputAM" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputName" class="col-sm-3 control-label">Nombre</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="inputName" name="inputName" >
+                                        </div>
+                                    </div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Añadir</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form><!-- ./form -->
+                <!-- fin modal -->
             </section>
 
             <!-- Main content -->
@@ -199,7 +266,7 @@
                                             + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >Acciones <span class="fa fa-caret-down"></span></button>'
                                             + '<ul class="dropdown-menu">'
                                             + '<li id="viewMats" value="'+msg.dataRes[i].id+'" data-toggle="modal" data-target="#modalViewMats"><a href="#" ><i class="fa fa-book "></i> Ver materias</a></li>'
-                                            + '<li><a href="#"><i class="fa fa-graduation-cap"></i> Ver alumnos</a></li>';
+                                            + '<li id="viewStudents" value="'+msg.dataRes[i].id+'" data-toggle="modal" data-target="#modalViewStudents" ><a href="#"><i class="fa fa-graduation-cap"></i> Ver alumnos</a></li>';
                                             + '</ul></div></td>'
                                             + '</tr>';
                                     $(newRow).appendTo("#data tbody");
@@ -515,6 +582,93 @@
                     }
                 });
                 
+                //Cargar Alumnos ventana Modal
+                $("#data").on("click", "#viewStudents", function(){
+                    var idGrupo = $(this).val();
+                    //$("#modalViewMats #addMat .buttonAddMat").data("whatever", idGrupo);
+                    var buttons = '<div class="row">';
+                    buttons += '<div class="col-sm-4"><button type="button" class="btn btn-info" id="addStudent" '
+                            +'data-toggle="modal" data-target="#modalAddStudent" data-grupo="'+idGrupo+'" >'
+                            +'Añadir Alumno</button></div>';
+                    buttons += '<div class="col-sm-4"><button type="button" class="btn btn-info" id="searchStudent" '
+                            +'data-toggle="modal" data-target="#modalSearchStudent" data-grupo="'+idGrupo+'" >'
+                            +'Buscar y Añadir Alumno</button></div>';
+                    buttons += '<div class="col-sm-4"><button type="button" class="btn btn-info" id="importStudent" '
+                            +'data-toggle="modal" data-target="#modalImportStudent" data-grupo="'+idGrupo+'" >'
+                            +'Importar Alumnos</button></div>';
+                    buttons += '</div>';
+                    $("#modalViewStudents .buttonAddStudent").html(buttons);
+                    console.log(idGrupo);
+                    $.ajax({
+                        type: "POST",
+                        data: {idGrupo: idGrupo},
+                        url: "../controllers/get_grupos_alumnos.php",
+                        success: function(msg){
+                            var msg = jQuery.parseJSON(msg);
+                            $("#modalViewStudents .students tbody").html("");
+                            if(msg.error == 0){
+                                var newRow = '';
+                                $.each(msg.dataRes, function(i, item){
+                                    newRow += '<tr>';
+                                        newRow += '<td>'+(i+1)+'</td>';
+                                        newRow += '<td>'+msg.dataRes[i].nameStudent+'</td>';
+                                    newRow += '</tr>';
+                                });
+                                $(newRow).appendTo("#modalViewStudents .students tbody");
+                            }else{
+                                var newRow = '<tr><td>'+msg.msgErr+'</td></tr>';
+                                $(newRow).appendTo("#modalViewStudents .students tbody");
+                            }
+                        }
+                    });
+                });
+                
+                //Añadir Alumno
+                $("#modalViewStudents").on("click", "#addStudent", function(){
+                    var idGrupo = $(this).data("grupo");
+                    $("#modalAddStudent .modal-body #inputIdGrupo").val(idGrupo);
+                    console.log("studiante: "+idGrupo);
+                });
+                
+                //Asignar materia y profesor
+                $('#formAddStudent').validate({
+                    rules: {
+                        inputAP: {required: true},
+                        inputAM: {required: true},
+                        inputName: {required: true}
+                    },
+                    messages: {
+                        inputAP: "Apellido paterno obligatoria",
+                        inputAM: "Apellido materno obligatoria",
+                        inputName: "Nombre obligatorio"
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/create_student.php",
+                            data: $('form#formAddStudent').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalAddStudent .divError').css({color: "#77DD77"});
+                                    $('#modalAddStudent .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('#modalAddStudent .divError').css({color: "#FF0000"});
+                                    $('#modalAddStudent .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al añadir alumno.");
+                            }
+                        });
+                    }
+                }); // end añadir nuevo cargo
             });
         </script>
 
