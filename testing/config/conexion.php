@@ -27,4 +27,12 @@ $tGMatProf = "grupos_mat_prof";
 $tGMatAlum = "grupos_mat_alum";
 
 $tPlanEst = "planes_estudios";
+//Tablas periodos
+$tPerInfo = "periodo_info";
+$tPerFecha = "periodo_fecha";
+//Tablas rubricas
+$tRubInfo = "rubrica_info";
+$tRubInfoCalif = "rubrica_info_calif";
+$tRubDetCalif = "rubrica_detalles_calif";
+
 ?>

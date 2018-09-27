@@ -4,6 +4,7 @@ if (isset($_SESSION['sessU']) AND $_SESSION['sessU'] == "true") {
     $cadMenuNavbar = '';
     if ($_SESSION['userPerfil'] == "1") {//Director
         $cadMenuNavbar .= '<li><a href="director_planes_estudios.php"><i class="fa fa-list text-yellow"></i> <span>Planes de estudio</span></a></li>';
+        $cadMenuNavbar .= '<li><a href="director_ciclos.php"><i class="fa fa-clock text-yellow"></i> <span>Ciclos Escolares</span></a></li>';
         $cadMenuNavbar .= '<li><a href="director_grupos.php"><i class="fa fa-list text-yellow"></i> <span>Grupos</span></a></li>';
     } else if ($_SESSION['userPerfil'] == "2") {//Administrativo
         $cadMenuNavbar .= '<li><a href="administrativo_grupos.php"><i class="fa fa-users text-red"></i> <span>Grupos</span></a></li>';
