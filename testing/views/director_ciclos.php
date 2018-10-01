@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- modal añadir nuevo periodo -->
-                <form class="form-horizontal" id="formAddPeriodo" name="formAddPlanEst">
+                <form class="form-horizontal" id="formAddPeriodo" name="formAddPeriodo">
                     <div class="modal fade" id="modalAddPeriodo" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -71,6 +71,73 @@
                 </form>
                 <!-- fin modal -->
 
+                <!-- modal añadir fechas periodo -->
+                <form class="form-horizontal" id="formAddDatePeriodo" name="formAddDatePeriodo">
+                    <div class="modal fade" id="modalAddDatePeriodo" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Nuevas fechas para el periodo</h4>
+                                    <p class="divError"></p>
+                                    <input type="text" class="form-control" id="inputIdPeriodo" name="inputIdPeriodo" >
+                                </div>
+                                <div class="modal-body">
+                                    <div class="contenido2"></div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Añadir</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form>
+                <!-- fin modal -->
+                
+                <!-- modal editar fechas periodo -->
+                <form class="form-horizontal" id="formUpdDatePeriodo" name="formUpdDatePeriodo">
+                    <div class="modal fade" id="modalUpdDatePeriodo" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Editar fechas para el periodo</h4>
+                                    <p class="divError"></p>
+                                    <input type="text" class="form-control" id="inputIdPeriodo" name="inputIdPeriodo" >
+                                </div>
+                                <div class="modal-body"> </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Actualizar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form>
+                <!-- fin modal -->
+                
+                <!-- modal ver fechas periodo -->
+                <form class="form-horizontal" id="formViewDatePeriodo" name="formViewDatePeriodo">
+                    <div class="modal fade" id="modalViewDatePeriodo" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Ver fechas para el periodo</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body"> </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Actualizar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form>
+                <!-- fin modal -->
+                
                 <!-- modal editar plan de estudio -->
                 <form class="form-horizontal" id="formUpdPlanEst" name="formUpdPlanEst">
                     <div class="modal fade" id="modalUpdPlanEst" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
@@ -154,18 +221,19 @@
                         url: "../controllers/get_periodos.php",
                         success: function (msg) {
                             console.log(msg);
-                            /*var msg = jQuery.parseJSON(msg);
+                            var msg = jQuery.parseJSON(msg);
                             if (msg.error == 0) {
                                 $("#data tbody").html("");
                                 $.each(msg.dataRes, function (i, item) {
                                     var newRow = '<tr>'
-                                            + '<td><a href="director_plan_estudio.php?action=viewDetails&route=viewDirection&pln=17' + msg.dataRes[i].id + '&id=256&idUser=512">' + msg.dataRes[i].nombre + '</a></td>'
-                                            + '<td>' + msg.dataRes[i].year + '</td>'
+                                            + '<td>' + msg.dataRes[i].nombre + '</td>'
+                                            + '<td>' + msg.dataRes[i].numero + '</td>'
                                             + '<td><div class="btn-group pull-right dropdown">'
                                             + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >Acciones <span class="fa fa-caret-down"></span></button>'
                                             + '<ul class="dropdown-menu">'
-                                            + '<li><a href="director_plan_estudio.php?action=viewDetails&route=viewDirection&pln=17' + msg.dataRes[i].id + '&id=256&idUser=512"><i class="fa fa-eye"></i> Ver</a></li>'
-                                            + '<li><a href="#" data-toggle="modal" data-target="#modalUpdPlanEst" id="editar" data-value="' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Editar</a></li>';
+                                            + '<li><a href="#" data-toggle="modal" data-target="#modalAddDatePeriodo" id="addDatePeriodo" data-periodo="' + msg.dataRes[i].id + '" data-num="'+msg.dataRes[i].numero+'" ><i class="far fa-calendar-plus"></i> Asignar fechas</a></li>'
+                                            + '<li><a href="#" data-toggle="modal" data-target="#modalUpdDatePeriodo" id="updDatePeriodo" data-periodo="' + msg.dataRes[i].id + '"><i class="far fa-calendar-alt"></i> Modificar fechas</a></li>'
+                                            + '<li><a href="#" data-toggle="modal" data-target="#modalViewDatePeriodo" id="viewDatePeriodo" data-periodo="' + msg.dataRes[i].id + '"><i class="far fa-eye"></i> Ver</a></li>'
                                             + '</ul></div></td>'
                                             + '</tr>';
                                     $(newRow).appendTo("#data tbody");
@@ -173,7 +241,7 @@
                             } else {
                                 var newRow = '<tr><td colspan="3">' + msg.msgErr + '</td></tr>';
                                 $("#data tbody").html(newRow);
-                            }*/
+                            }
                         },
                         error: function (x, e) {
                             var cadErr = '';
@@ -261,42 +329,83 @@
                     });
                 })
 
-                $("#data").on("click", "#editar", function () {
-                    var idPlanEst2 = $(this).data('value');
-                    console.log(idPlanEst2);
-                    $(".loader").show();
+                $("#data").on("click", "#updDatePeriodo", function(){
+                    var idPeriodo = $(this).data('periodo');
+                    $("#modalUpdDatePeriodo .modal-header #inputIdPeriodo").val(idPeriodo);
+                    console.log(idPeriodo);
                     $.ajax({
                         type: "POST",
-                        url: "../controllers/get_planes_estudio.php",
-                        data: {ordenar: ordenar, tarea: 'editar', idPlanEst: idPlanEst2},
-                        success: function (msg) {
+                        url: "../controllers/get_fechas_periodo.php",
+                        data: {idPeriodo: idPeriodo},
+                        success: function(msg){
                             console.log(msg);
                             var datos = jQuery.parseJSON(msg);
-                            $("#modalUpdPlanEst .modal-body #inputIdPlan").val(datos.dataRes[0].id);
-                            $("#modalUpdPlanEst .modal-body #inputName").val(datos.dataRes[0].nombre);
-                            $("#modalUpdPlanEst .modal-body #inputYear").val(datos.dataRes[0].year);
-                            $(".loader").hide();
-                        },
-                        error: function (x, e) {
-                            var cadErr = '';
-                            if (x.status == 0) {
-                                cadErr = '¡Estas desconectado!\n Por favor checa tu conexión a Internet.';
-                            } else if (x.status == 404) {
-                                cadErr = 'Página no encontrada.';
-                            } else if (x.status == 500) {
-                                cadErr = 'Error interno del servidor.';
-                            } else if (e == 'parsererror') {
-                                cadErr = 'Error.\nFalló la respuesta JSON.';
-                            } else if (e == 'timeout') {
-                                cadErr = 'Tiempo de respuesta excedido.';
-                            } else {
-                                cadErr = 'Error desconocido.\n' + x.responseText;
+                            if (datos.error == 0) {
+                                $("#modalUpdDatePeriodo .modal-body").html("");
+                                var cadInputFecha = '';
+                                $.each(datos.dataRes, function (i, item) {
+                                    cadInputFecha += '<div class="row">'
+                                        + '<div class="col-sm-2">'
+                                        + '<input type="text" id="inputIdFechaPeriodo" name="inputIdFechaPeriodo[]" value="'+datos.dataRes[i].id+'">'
+                                        + '<label class="control-label">Fecha de Inicio ' +(i+1)+ '</label>'
+                                        + '</div>'
+                                        + '<div class="col-sm-4">'
+                                        + '<input type="date" class="form-control datePeriododBegin" id="datePeriododBegin" name="datePeriododBegin[]" required value="'+datos.dataRes[i].fechaInicio+'">'
+                                        + '</div>'
+                                        + '<div class="col-sm-2">'
+                                        + '<label class="control-label">Fecha de Fin ' +(i+1)+ '</label>'
+                                        + '</div>'
+                                        + '<div class="col-sm-4">'
+                                        + '<input type="date" class="form-control" id="datePeriododEnd" name="datePeriododEnd[]" required value="'+datos.dataRes[i].fechaFin+'">'
+                                        + '</div>'
+                                        + '</div>';
+                                });
+                                $("#modalUpdDatePeriodo .modal-body").html(cadInputFecha);
+                            }else{
+                                $("#modalUpdDatePeriodo .modal-body").html(datos.msgErr);
                             }
-                            alert(cadErr);
                         }
                     })
                 })
-
+                
+                $("#data").on("click", "#viewDatePeriodo", function(){
+                    var idPeriodo = $(this).data('periodo');
+                    //$("#modalUpdDatePeriodo .modal-header #inputIdPeriodo").val(idPeriodo);
+                    console.log(idPeriodo);
+                    $.ajax({
+                        type: "POST",
+                        url: "../controllers/get_fechas_periodo.php",
+                        data: {idPeriodo: idPeriodo},
+                        success: function(msg){
+                            console.log(msg);
+                            var datos = jQuery.parseJSON(msg);
+                            if (datos.error == 0) {
+                                $("#modalViewDatePeriodo .modal-body").html("");
+                                var cadInputFecha = '';
+                                $.each(datos.dataRes, function (i, item) {
+                                    cadInputFecha += '<div class="row">'
+                                        + '<div class="col-sm-2">'
+                                        + '<label class="control-label">Fecha de Inicio ' +(i+1)+ '</label>'
+                                        + '</div>'
+                                        + '<div class="col-sm-4">'
+                                        + '<input type="date" class="form-control datePeriododBegin" id="datePeriododBegin" name="datePeriododBegin[]" readonly value="'+datos.dataRes[i].fechaInicio+'">'
+                                        + '</div>'
+                                        + '<div class="col-sm-2">'
+                                        + '<label class="control-label">Fecha de Fin ' +(i+1)+ '</label>'
+                                        + '</div>'
+                                        + '<div class="col-sm-4">'
+                                        + '<input type="date" class="form-control" id="datePeriododEnd" name="datePeriododEnd[]" readonly value="'+datos.dataRes[i].fechaFin+'">'
+                                        + '</div>'
+                                        + '</div>';
+                                });
+                                $("#modalViewDatePeriodo .modal-body").html(cadInputFecha);
+                            }else{
+                                $("#modalViewDatePeriodo .modal-body").html(datos.msgErr);
+                            }
+                        }
+                    })
+                })
+                
                 $(document).on("click", ".modal-body li a", function () {
                     tab = $(this).attr("href");
                     $(".modal-body .tab-content div").each(function () {
@@ -305,43 +414,149 @@
                     $(".modal-body .tab-content " + tab).addClass("active");
                 });
 
-                //Asignar materia y profesor
+                //Crear nuevo periodo
                 $('#formAddPeriodo').validate({
                     rules: {
-                        inputMat: {required: true},
-                        inputProf: {required: true}
+                        inputName: {required: true},
+                        inputNum: {required: true}
                     },
                     messages: {
-                        inputMat: "Materia obligatoria",
-                        inputProf: "Profesor que impartirá la materia, obligatorio"
+                        inputName: "Nombre del periodo a crear, obligatorio",
+                        inputNum: "Número de periodos internos, obligatorios, mínimo 1."
                     },
                     submitHandler: function(form){
                         $.ajax({
                             type: "POST",
-                            url: "../controllers/create_grupo_mat_prof.php",
+                            url: "../controllers/create_periodo.php",
                             data: $('form#formAddPeriodo').serialize(),
                             success: function(msg){
                                 console.log(msg);
                                 var msg = jQuery.parseJSON(msg);
                                 if(msg.error == 0){
-                                    $('.divError').css({color: "#77DD77"});
-                                    $('.divError').html(msg.msgErr);
+                                    $('#modalAddPeriodo .modal-header .divError').css({color: "#77DD77"});
+                                    $('#modalAddPeriodo .modal-header .divError').html(msg.msgErr);
                                     setTimeout(function () {
                                       location.reload();
                                     }, 1500);
                                 }else{
-                                    $('.divError').css({color: "#FF0000"});
-                                    $('.divError').html(msg.msgErr);
+                                    $('#modalAddPeriodo .modal-header .divError').css({color: "#FF0000"});
+                                    $('#modalAddPeriodo .modal-header .divError').html(msg.msgErr);
                                     setTimeout(function () {
-                                      $('#divError').hide();
+                                      $('#modalAddPeriodo .modal-header .divError').hide();
                                     }, 1500);
                                 }
                             }, error: function(){
-                                alert("Error al asignar materia al grupo.");
+                                alert("Error al crear periodo nuevo.");
                             }
                         });
                     }
                 }); // end añadir nuevo cargo
+                
+                //Crear nuevas fechas para el periodo
+                $('#formAddDatePeriodo').validate({
+                    debug:false,
+                    rules: {
+                        'datePeriododBegin[]': {required: true},
+                        'datePeriododEnd[]': {required: true}
+                    },
+                    messages: {
+                        'datePeriododBegin[]': "Fecha de inicio obligatoria",
+                        'datePeriododEnd[]': "Fecha de finalización obligatoria"
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/create_fechas_periodo.php",
+                            data: $('form#formAddDatePeriodo').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalAddDatePeriodo .modal-header .divError').css({color: "#77DD77"});
+                                    $('#modalAddDatePeriodo .modal-header .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('#modalAddDatePeriodo .modal-header .divError').css({color: "#FF0000"});
+                                    $('#modalAddDatePeriodo .modal-header .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#modalAddDatePeriodo .modal-header .divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al crear fechas del periodo.");
+                            }
+                        });
+                    }
+                }); // end añadir nuevo cargo
+                
+                //Crear nuevas fechas para el periodo
+                $('#formUpdDatePeriodo').validate({
+                    debug:false,
+                    rules: {
+                        'datePeriododBegin[]': {required: true},
+                        'datePeriododEnd[]': {required: true}
+                    },
+                    messages: {
+                        'datePeriododBegin[]': "Fecha de inicio obligatoria",
+                        'datePeriododEnd[]': "Fecha de finalización obligatoria"
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/update_fechas_periodo.php",
+                            data: $('form#formUpdDatePeriodo').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalUpdDatePeriodo .modal-header .divError').css({color: "#77DD77"});
+                                    $('#modalUpdDatePeriodo .modal-header .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('#modalUpdDatePeriodo .modal-header .divError').css({color: "#FF0000"});
+                                    $('#modalUpdDatePeriodo .modal-header .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#modalUpdDatePeriodo .modal-header .divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al actualizar fechas del periodo.");
+                            }
+                        });
+                    }
+                }); // end añadir nuevo cargo
+                
+                //Obtener ID Periodo
+                $("#data tbody").on("click", "#addDatePeriodo", function(){
+                    var idPeriodo = $(this).data("periodo");
+                    var numPeriodo = $(this).data("num");
+                    $("#modalAddDatePeriodo .modal-header #inputIdPeriodo").val(idPeriodo);
+                    console.log("Periodo: "+idPeriodo+", Núm: "+numPeriodo);
+                    $("#modalAddDatePeriodo .modal-body .contenido2").html("");
+                    var cadInputFecha = '';
+                    for(var i=0; i<numPeriodo; i++){
+                        cadInputFecha += '<div class="row">'
+                        + '<div class="col-sm-2">'
+                        + '<label class="control-label">Fecha de Inicio ' +(i+1)+ '</label>'
+                        + '</div>'
+                        + '<div class="col-sm-4">'
+                        + '<input type="date" class="form-control datePeriododBegin" id="datePeriododBegin" name="datePeriododBegin[]" required>'
+                        + '</div>'
+                        + '<div class="col-sm-2">'
+                        + '<label class="control-label">Fecha de Fin ' +(i+1)+ '</label>'
+                        + '</div>'
+                        + '<div class="col-sm-4">'
+                        + '<input type="date" class="form-control" id="datePeriododEnd" name="datePeriododEnd[]" required>'
+                        + '</div>'
+                        + '</div>';
+                    }
+                    console.log(cadInputFecha);
+                    $("#modalAddDatePeriodo .modal-body .contenido2").html(cadInputFecha);
+                });
 
             });
         </script>
