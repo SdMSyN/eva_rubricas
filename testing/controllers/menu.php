@@ -12,6 +12,7 @@ if (isset($_SESSION['sessU']) AND $_SESSION['sessU'] == "true") {
         $cadMenuNavbar .= '<li><a href="#"><i class="fa fa-graduation-cap text-yellow"></i> <span>Alumnos</span></a></li>';
         $cadMenuNavbar .= '<li><a href="administrativo_materias.php"><i class="fa fa-book text-green"></i> <span>Materías</span></a></li>';
     } else if ($_SESSION['userPerfil'] == "3") {//Profesor
+        $cadMenuNavbar .= '<li><a href="profesor_grupos.php"><i class="fa fa-list text-yellow"></i> <span>Grupos</span></a></li>';
     } else if ($_SESSION['userPerfil'] == "4") {//Alumno
     } else if ($_SESSION['userPerfil'] == "5") { //Tutor
     } else if ($_SESSION['userPerfil'] == "10") { //Sysadmin

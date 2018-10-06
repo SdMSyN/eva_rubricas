@@ -34,3 +34,4 @@ ALTER TABLE `rubrica_info` ADD FOREIGN KEY (`estado_id`) REFERENCES `eva_pec`.`e
 ALTER TABLE `rubrica_info_calif` ADD FOREIGN KEY (`rubrica_info_id`) REFERENCES `eva_pec`.`rubrica_info`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 /*Falto el código de la llave foranea de rubrica_info_calif*/
 ALTER TABLE `rubrica_detalles_calif` ADD FOREIGN KEY (`user_alumno_id`) REFERENCES `eva_pec`.`usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `grupos_info` ADD FOREIGN KEY (`periodo_info_id`) REFERENCES `eva_pec`.`periodo_info`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

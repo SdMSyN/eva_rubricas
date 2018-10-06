@@ -44,3 +44,7 @@ label.error {
 	font-family: FontAwesome;
 	content: "\f161";
 }
+
+#data tbody .verMat{
+    cursor: pointer;
+}
