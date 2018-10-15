@@ -39,6 +39,91 @@
                     </div>
                 </div>
                 
+                <!-- modal ver rubricas -->
+                <div class="modal fade" id="modalViewRub" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Ver Rubricas</h4>
+                                <p class="divError"></p>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row text-center buttonAddRub">
+                                    
+                                </div>
+                                <br>
+                                <table class="table table-striped rubricasInfo">
+                                    <thead>
+                                        <tr><th>Nombre</th><th>Actualizar</th><th>Eliminar</th></tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div><!-- ./modal-body -->
+                        </div><!-- ./modal-content -->
+                    </div><!-- ./modal-dialog -->
+                </div><!-- ./modal fade -->
+                <!-- fin modal -->
+                
+                <!-- modal añadir rubricas -->
+                <form class="form-horizontal" id="formAddRub" name="formAddRub">
+                    <div class="modal fade" id="modalAddRub" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Añadir Rubrica</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="inputIdPeriodo" name="inputIdPeriodo" >
+                                    <input type="text" id="inputIdGMatProf" name="inputIdGMatProf" >
+                                    <div class="form-group">
+                                        <label for="inputMat" class="col-sm-3 control-label">Rubrica: </label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="inputName" name="inputName" required>
+                                        </div>
+                                    </div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Añadir</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form><!-- ./form -->
+                <!-- fin modal -->
+                
+                <!-- modal actualizar rubricas -->
+                <form class="form-horizontal" id="formUpdRub" name="formUpdRub">
+                    <div class="modal fade" id="modalUpdRub" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Actualizar Rubrica</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="inputIdRubrica" name="inputIdRubrica" >
+                                    <div class="form-group">
+                                        <label for="inputMat" class="col-sm-3 control-label">Rubrica: </label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="inputName" name="inputName" required>
+                                        </div>
+                                    </div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Actualizar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form><!-- ./form -->
+                <!-- fin modal -->
             </section>
 
             <!-- Main content -->
@@ -89,24 +174,32 @@
                         url: "../controllers/get_periodos_fechas.php",
                         success: function (msg) {
                             console.log(msg);
-                            /*var msg = jQuery.parseJSON(msg);
+                            var msg = jQuery.parseJSON(msg);
                             if (msg.error == 0) {
                                 $("#data tbody").html("");
                                 $.each(msg.dataRes, function (i, item) {
-                                    var newRow = '<tr class="verMat" data-href="'+msg.dataRes[i].id+'">'
-                                            + '<td>' + msg.dataRes[i].materia + '</td>'
-                                            + '<td>' + msg.dataRes[i].grupo + '</td>'
-                                            + '<td>' + msg.dataRes[i].grado + '</td>'
-                                            + '<td>' + msg.dataRes[i].turno + '</td>'
-                                            + '<td>' + msg.dataRes[i].year + '</td>'
-                                            + '<td>' + msg.dataRes[i].planEst + '</td>'
+                                    var newRow = '<tr>'
+                                            + '<td>' + (i+1) + '</td>'
+                                            + '<td>' + msg.dataRes[i].fInicio + '</td>'
+                                            + '<td>' + msg.dataRes[i].fFin + '</td>'
+                                            + '<td><div class="btn-group pull-right dropdown">'
+                                            + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >Acciones <span class="fa fa-caret-down"></span></button>'
+                                            + '<ul class="dropdown-menu">'
+                                            + '<li><a href="#" data-toggle="modal" data-target="#modalViewRub" id="verRubrica" data-value="'+msg.dataRes[i].id+'"><i class="fa fa-eye"></i> Ver Rubricas</a></li>'
+                                            + '<li><a href="prof_create_rubrica.php?idGMatProf='+<?=$idGMatProf;?>
+                                                + '&idGrupo=' + <?=$idGrupo;?> + '&idPeriodo=' + <?=$idPeriodo;?> 
+                                                + '&idPeriodoFecha=' + msg.dataRes[i].id + '"><i class="fa fa-check"></i> Evaluar Rubrica</a></li>'
+                                            + '<li><a href="#"><i class="fa fa-edit"></i> Modificar Rubrica</a></li>'
+                                            + '<li><a href="#"><i class="fa fa-hourglass-end"></i> Terminar periodo</a></li>'
+                                            + '<li><a href="#"><i class="fa fa-eye"></i> Ver calificaciones</a></li>'
+                                            + '</ul></div></td>'
                                             + '</tr>';
                                     $(newRow).appendTo("#data tbody");
                                 })
                             } else {
                                 var newRow = '<tr><td colspan="3">' + msg.msgErr + '</td></tr>';
                                 $("#data tbody").html(newRow);
-                            }*/
+                            }
                         },
                         error: function (x, e) {
                             var cadErr = '';
@@ -145,6 +238,144 @@
                     filtrar();
                 });
                 
+                //Cargar rubricas a ventana modal
+                $("#data").on("click", "#verRubrica", function(){
+                    var idPeriodo = $(this).data("value");
+                    //$("#modalViewMats #addMat .buttonAddMat").data("whatever", idGrupo);
+                    $("#modalViewRub .buttonAddRub").html('<button type="button" class="btn btn-danger" id="addRub" data-toggle="modal" data-target="#modalAddRub" data-whatever="'+idPeriodo+'" >Crear Rubrica</button>');
+                    console.log(idPeriodo);
+                    $.ajax({
+                        type: "POST",
+                        data: {idGMatProf: <?= $idGMatProf; ?>, idPeriodo: idPeriodo},
+                        url: "../controllers/get_rubricas_info.php",
+                        success: function(msg){
+                            var msg = jQuery.parseJSON(msg);
+                            $("#modalViewRub .rubricasInfo tbody").html("");
+                            if(msg.error == 0){
+                                var newRow = '';
+                                $.each(msg.dataRes, function(i, item){
+                                    newRow += '<tr>';
+                                        newRow += '<td>'+msg.dataRes[i].nombre+'</td>';
+                                        newRow += '<td>'
+                                                +'<button type="button" class="btn btn-primary" id="updRub" data-whatever="'+msg.dataRes[i].id+'" data-grupo="" data-toggle="modal" data-target="#modalUpdRub">'
+                                                    +'Actualizar rubrica'
+                                                +'</button></td>';
+                                        newRow += '<td>'
+                                                 +'<button type="button" class="btn btn-danger" id="delReb" value="'+msg.dataRes[i].id+'"><span class="glyphicon glyphicon-remove"></span></button>'
+                                                  +'</td>';
+                                    newRow += '</tr>';
+                                });
+                                $(newRow).appendTo("#modalViewRub .rubricasInfo tbody");
+                            }else{
+                                var newRow = '<tr><td>'+msg.msgErr+'</td></tr>';
+                                $(newRow).appendTo("#modalViewRub .rubricasInfo tbody");
+                            }
+                        }
+                    });
+                });
+                
+                //Añadir rubrica a periodo
+                $("#modalViewRub").on("click", "#addRub", function(){
+                    var idPeriodo = $(this).data("whatever");
+                    $("#modalAddRub .modal-body #inputIdPeriodo").val(idPeriodo);
+                    $("#modalAddRub .modal-body #inputIdGMatProf").val(<?=$idGMatProf;?>);
+                    console.log("hola "+idPeriodo);
+                });
+                
+                //Actualizar rubrica
+                $("#modalViewRub").on("click", "#updRub", function(){
+                    var idRubrica = $(this).data("whatever");
+                    $("#modalUpdRub .modal-body #inputIdRubrica").val(idRubrica);
+                    console.log("hola "+idRubrica);
+                    $.ajax({
+                        type: "POST",
+                        data: {idRubrica: idRubrica},
+                        url: "../controllers/get_rubricas_info.php",
+                        success: function(msg){
+                            console.log(msg);
+                            var msg = jQuery.parseJSON(msg);
+                            console.log(msg);
+                            $("#modalUpdRub .modal-body #inputName").html("");
+                            if(msg.error == 0){
+                                $("#modalUpdRub .modal-body #inputName").val(msg.dataRes[0].nombre);
+                            }else{
+                                $("#modalUpdRub .modal-body #inputName").val(msg.msgErr);
+                            }
+                        }
+                    });
+                });
+                
+                //Añadir rubrica
+                $('#formAddRub').validate({
+                    rules: {
+                        inputName: {required: true},
+                    },
+                    messages: {
+                        inputName: "Nombre obligatorio",
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/create_rubrica_info.php",
+                            data: $('form#formAddRub').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalAddRub .divError').css({color: "#77DD77"});
+                                    $('#modalAddRub .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('#modalAddRub .divError').css({color: "#FF0000"});
+                                    $('#modalAddRub .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al crear rubrica.");
+                            }
+                        });
+                    }
+                }); // end añadir rubrica
+                
+                //Actualizar rubrica
+                $('#formUpdRub').validate({
+                    rules: {
+                        inputName: {required: true},
+                    },
+                    messages: {
+                        inputName: "Nombre obligatorio",
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/update_rubrica_info.php",
+                            data: $('form#formUpdRub').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalUpdRub .modal-header .divError').css({color: "#77DD77"});
+                                    $('#modalUpdRub .modal-header .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('#modalUpdRub .modal-header .divError').css({color: "#FF0000"});
+                                    $('#modalUpdRub .modal-header .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al actualizar rubrica.");
+                            }
+                        });
+                    }
+                }); // end añadir rubrica
                 
             });
         </script>

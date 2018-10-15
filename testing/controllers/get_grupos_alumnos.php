@@ -7,7 +7,7 @@ $msgErr = '';
 $ban = false;
 
 $idGrupo = $_POST['idGrupo'];
-$sqlGetStudents = "SELECT $tUsers.nombre as nameStudent "
+$sqlGetStudents = "SELECT $tUsers.id as idStudent, $tUsers.nombre as nameStudent "
         . "FROM $tGAlum "
         . "INNER JOIN $tUsers ON $tUsers.id = $tGAlum.user_alumno_id "
         . "WHERE $tGAlum.grupo_info_id = '$idGrupo' ORDER BY nameStudent ";
@@ -33,8 +33,9 @@ if ($vorder != '') {
 $resGetStudents = $con->query($sqlGetStudents);
 if ($resGetStudents->num_rows > 0) {
     while ($rowGetStudents = $resGetStudents->fetch_assoc()) {
+        $id = $rowGetStudents['idStudent'];
         $name = $rowGetStudents['nameStudent'];
-        $students[] = array('nameStudent' => $name);
+        $students[] = array('idStudent' => $id, 'nameStudent' => $name);
         $ban = true;
     }
 } else {
