@@ -23,4 +23,4 @@
 <!-- validación de formularios -->
 <script src="../dist/js/jquery.validate.min.js"></script>
 <script src="../dist/js/additional-methods.min.js"></script>
-<!-- <script src="../dist/js/jquery-validate.bootstrap-tooltip.min.js"></script> -->
+<script src="../dist/js/jquery-validate.bootstrap-tooltip.min.js"></script>

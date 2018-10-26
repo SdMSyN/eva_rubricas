@@ -25,22 +25,13 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="col-xs-4">
                             <input type="text" id="inputIdRubrica" name="inputIdRubrica" >
-                            <label for="inputRubricas">Selecciona la rubrica a Evaluar:</label>
+                            <label for="inputRubricas">Selecciona la rubrica a Modificar:</label>
                             <select class="form-control" id="inputRubricas" name="inputRubricas"></select>
                         </div>
-                        <div class="col-xs-5">
-                            <label for="inputNombre">Nombre:</label> 
-                            <input class="form-control" id="inputNombre" name="inputNombre" placeholder="Nombre de la rubrica">
-                        </div>
-                        <div class="col-xs-3">
-                            <label for="inputFecha">Fecha:</label> 
-                            <input type="date" class="form-control" id="inputFecha" name="inputFecha" value="<?=$dateNow; ?>">
-                        </div>
-                        <div class="col-xs-1">
-                            <label>Terminar</label>
-                            <button type="submit" id="guardar_datos" class="btn btn-info">Calificar</button>
+                        <div class="col-xs-offset-4 col-xs-4">
+                            <button type="submit" id="guardar_datos" class="btn btn-info">Modificar</button>
                         </div>
                     </div>
                 </section>
@@ -58,11 +49,11 @@
                                     <div class="table table-condensed table-hover table-striped">
                                         <table class="table table-striped table-bordered" id="data">
                                             <thead>
-                                                <tr>
+                                                <!-- <tr>
                                                     <th><span title="grupo">ID</span></th>
                                                     <th><span title="grupo">Nombre</span></th>
                                                     <th><span title="grupo">Calificación</span></th>
-                                                </tr>
+                                                </tr> -->
                                             </thead>
                                             <tbody></tbody>
                                         </table>
@@ -100,30 +91,6 @@
                                     text: msg.dataRes[i].nombre
                                 }));
                             });
-                            //Si salio correcto cargamos los alumnos
-                            $.ajax({
-                                type: "POST",
-                                data: {idGrupo: <?= $idGrupo; ?>},
-                                url: "../controllers/get_grupos_alumnos.php",
-                                success: function(msg2){
-                                    console.log(msg2);
-                                    var msg2 = jQuery.parseJSON(msg2);
-                                    if (msg2.error == 0) {
-                                        $("#data tbody").html("");
-                                        $.each(msg2.dataRes, function (i, item){
-                                            var newRow = '<tr>'
-                                                + '<td><input type="text" id="inputIdAlum" name="inputIdAlum[]" value="'+msg2.dataRes[i].idStudent+'" >'
-                                                + msg2.dataRes[i].idStudent + '</td>'
-                                                + '<td>' + msg2.dataRes[i].nameStudent + '</td>'
-                                                + '<td><input type="number" id="inputCalif" name="inputCalif[]" value="10" style="display: none; " class="form-control inputCalif"></td>';
-                                            $(newRow).appendTo("#data tbody");
-                                        });
-                                    }else{
-                                        var newRow = '<tr><td colspan="3">' + msg2.msgErr + '</td></tr>';
-                                        $("#data tbody").html(newRow);
-                                    }
-                                }
-                            });
                         }else{
                             $(".content-header #inputRubricas").html("<option>"+msg.msgErr+"</option>");
                         }
@@ -134,7 +101,60 @@
                     var idRubrica = $(this).val();
                     console.log(idRubrica);
                     $("#inputIdRubrica").val(idRubrica);
-                    $("#data tbody .inputCalif").css('display', '');
+                    $("#data thead").html("");
+                    $("#data tbody").html("");
+                    //Si salio correcto cargamos los alumnos y las rubricas
+                    $.ajax({
+                        type: "POST",
+                        data: {idGrupo: <?= $idGrupo; ?>, idRubricaInfo: idRubrica},
+                        url: "../controllers/get_calif_alumnos_rubricas.php",
+                        success: function(msg2){
+                            console.log(msg2);
+                            msg2 = jQuery.parseJSON(msg2);
+                            if(msg2.error == 0){
+                                //Añadimos cabecerás
+                                var newRowTH = '<tr><th>Nombre</th>';
+                                var cantRub = 0;
+                                $.each(msg2.rubricas, function(i, item){
+                                    newRowTH += '<th>' + msg2.rubricas[i].nombreRub + ' <br>('
+                                        + msg2.rubricas[i].fechaRub + ')</th>';
+                                    cantRub++;
+                                });
+                                newRowTH += '</tr>';
+                                $(newRowTH).appendTo("#data thead");
+                                //Añadimos alumnos y sus calificaciones
+                                var newRowTB = '';
+                                $.each(msg2.students, function(j, item){
+                                    newRowTB += '<tr>'
+                                    newRowTB += '<td>' + msg2.students[j].nameStudent + '</td>';
+                                    $.each(msg2.calRubricas, function(k, item){
+                                        newRowTB += '<td>'+msg2.students[j].cals[k].califRub+'</td>';
+                                    })
+                                    newRowTB += '</tr>';
+                                });
+                                $(newRowTB).appendTo("#data tbody");
+                            }else{
+                                var newRow = '<tr><td colspan="3">' + msg2.msgErr + '</td></tr>';
+                                $("#data thead").html(newRow);
+                            }
+                            
+                            /*var msg2 = jQuery.parseJSON(msg2);
+                            if (msg2.error == 0) {
+                                $("#data tbody").html("");
+                                $.each(msg2.dataRes, function (i, item){
+                                    var newRow = '<tr>'
+                                        + '<td><input type="text" id="inputIdAlum" name="inputIdAlum[]" value="'+msg2.dataRes[i].idStudent+'" >'
+                                        + msg2.dataRes[i].idStudent + '</td>'
+                                        + '<td>' + msg2.dataRes[i].nameStudent + '</td>'
+                                        + '<td><input type="number" id="inputCalif" name="inputCalif[]" class="form-control" value="10"></td>';
+                                    $(newRow).appendTo("#data tbody");
+                                });
+                            }else{
+                                var newRow = '<tr><td colspan="3">' + msg2.msgErr + '</td></tr>';
+                                $("#data tbody").html(newRow);
+                            }*/
+                        }
+                    });
                 });
                 
                 //Añadir rubrica

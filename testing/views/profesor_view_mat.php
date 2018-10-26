@@ -189,7 +189,9 @@
                                             + '<li><a href="prof_create_rubrica.php?idGMatProf='+<?=$idGMatProf;?>
                                                 + '&idGrupo=' + <?=$idGrupo;?> + '&idPeriodo=' + <?=$idPeriodo;?> 
                                                 + '&idPeriodoFecha=' + msg.dataRes[i].id + '"><i class="fa fa-check"></i> Evaluar Rubrica</a></li>'
-                                            + '<li><a href="#"><i class="fa fa-edit"></i> Modificar Rubrica</a></li>'
+                                            + '<li><a href="prof_update_rubrica.php?idGMatProf='+<?=$idGMatProf;?>
+                                                + '&idGrupo=' + <?=$idGrupo;?> + '&idPeriodo=' + <?=$idPeriodo;?> 
+                                                + '&idPeriodoFecha=' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Modificar Rubrica</a></li>'
                                             + '<li><a href="#"><i class="fa fa-hourglass-end"></i> Terminar periodo</a></li>'
                                             + '<li><a href="#"><i class="fa fa-eye"></i> Ver calificaciones</a></li>'
                                             + '</ul></div></td>'
