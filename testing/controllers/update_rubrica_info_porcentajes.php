@@ -3,21 +3,21 @@
 include('../config/conexion.php');
 include('../config/variables.php');
 
-$countCals = count($_POST['inputCalif']);
+$countRubs = count($_POST['inputIdRubInfo']);
 
 $cad = '';
 $ban = false;
 
 
-for($i = 0; $i < $countCals; $i++) {
-    $idDetCalif = $_POST['inputIdDetCalif'][$i];
-    $califAlum = $_POST['inputCalif'][$i];
-    $sqlUpdateRubDetCalif = "UPDATE $tRubDetCalif SET calificacion = '$califAlum' WHERE id = '$idDetCalif' ";
-    if ($con->query($sqlUpdateRubDetCalif) === TRUE) {
+for($i = 0; $i < $countRubs; $i++) {
+    $idRubInfo = $_POST['inputIdRubInfo'][$i];
+    $porcRub = $_POST['porcRub'][$i];
+    $sqlUpdateRubInfo = "UPDATE $tRubInfo SET porcentaje = '$porcRub' WHERE id = '$idRubInfo' ";
+    if ($con->query($sqlUpdateRubInfo) === TRUE) {
         $ban = true;
-        $cad .= 'Calificación del alumno: ' . $idDetCalif . ', actualizada con éxito.';
+        $cad .= 'Rubrica ' . $idRubInfo . ', actualizada con éxito.';
     } else {
-        $cad .= 'Error al actualizar calificación del alumno: ' . $idDetCalif . '<br>' . $con->error;
+        $cad .= 'Error al actualizar porcentajes <br>' . $con->error;
         $ban = false;
         break;
     }

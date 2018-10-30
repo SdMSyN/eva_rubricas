@@ -459,10 +459,17 @@
                 //Añadir rubrica
                 $('#formEndPeriod').validate({
                     rules: {
-                        inputName: {required: true},
+                        'porcRub[]': {required: true, range: [0, 100], digits: true}
                     },
                     messages: {
-                        inputName: "Nombre obligatorio",
+                        'porcRub[]': {
+                                required: "Porcentaje de la rubrica obligatorio", 
+                                range: "Solo números entre 0 y 100", 
+                                digits: "Solo se permiten números enteros."
+                        }
+                    },
+                    tooltip_options:{
+                        'porcRub[]': {trigger: "focus", placement: "bottom"}
                     },
                     submitHandler: function(form){
                         $.ajax({
@@ -473,20 +480,20 @@
                                 console.log(msg);
                                 var msg = jQuery.parseJSON(msg);
                                 if(msg.error == 0){
-                                    $('#modalAddRub .divError').css({color: "#77DD77"});
-                                    $('#modalAddRub .divError').html(msg.msgErr);
+                                    $('#modalEndPeriod .divError').css({color: "#77DD77"});
+                                    $('#modalEndPeriod .divError').html(msg.msgErr);
                                     setTimeout(function () {
                                       location.reload();
                                     }, 1500);
                                 }else{
-                                    $('#modalAddRub .divError').css({color: "#FF0000"});
-                                    $('#modalAddRub .divError').html(msg.msgErr);
+                                    $('#modalEndPeriod .divError').css({color: "#FF0000"});
+                                    $('#modalEndPeriod .divError').html(msg.msgErr);
                                     setTimeout(function () {
                                       $('#divError').hide();
                                     }, 1500);
                                 }
                             }, error: function(){
-                                alert("Error al crear rubrica.");
+                                alert("Error al actualizar porcentajes de las rubricas.");
                             }
                         });
                     }
