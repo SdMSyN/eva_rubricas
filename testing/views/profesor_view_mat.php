@@ -50,7 +50,6 @@
                             </div>
                             <div class="modal-body">
                                 <div class="row text-center buttonAddRub">
-                                    
                                 </div>
                                 <br>
                                 <table class="table table-striped rubricasInfo">
@@ -124,6 +123,40 @@
                     </div><!-- ./modal fade -->
                 </form><!-- ./form -->
                 <!-- fin modal -->
+                
+                <!-- modal terminar ciclo -->
+                <form class="form-horizontal" id="formEndPeriod" name="formEndPeriod">    
+                    <div class="modal fade" id="modalEndPeriod" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Terminar periodo</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row text-center buttonAddRub">
+                                    </div>
+                                    <br>
+                                    <table class="table table-striped rubricasInfo">
+                                        <thead>
+                                            <tr><th>Nombre</th><th>%</th></tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary" disabled>Terminar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form>
+                <!-- fin modal -->
+                
+                
             </section>
 
             <!-- Main content -->
@@ -192,7 +225,7 @@
                                             + '<li><a href="prof_update_rubrica.php?idGMatProf='+<?=$idGMatProf;?>
                                                 + '&idGrupo=' + <?=$idGrupo;?> + '&idPeriodo=' + <?=$idPeriodo;?> 
                                                 + '&idPeriodoFecha=' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Modificar Rubrica</a></li>'
-                                            + '<li><a href="#"><i class="fa fa-hourglass-end"></i> Terminar periodo</a></li>'
+                                            + '<li><a href="#" data-toggle="modal" data-target="#modalEndPeriod" id="endRubrica" data-value="'+msg.dataRes[i].id+'"><i class="fa fa-hourglass-end"></i> Terminar periodo</a></li>'
                                             + '<li><a href="#"><i class="fa fa-eye"></i> Ver calificaciones</a></li>'
                                             + '</ul></div></td>'
                                             + '</tr>';
@@ -374,6 +407,86 @@
                                 }
                             }, error: function(){
                                 alert("Error al actualizar rubrica.");
+                            }
+                        });
+                    }
+                }); // end añadir rubrica
+                
+                //Terminar periodo
+                $("#data").on("click", "#endRubrica", function(){
+                    var idPeriodo = $(this).data("value");
+                    console.log(idPeriodo);
+                    $.ajax({
+                        type: "POST",
+                        data: {idGMatProf: <?= $idGMatProf; ?>, idPeriodo: idPeriodo},
+                        url: "../controllers/get_rubricas_info.php",
+                        success: function(msg){
+                            var msg = jQuery.parseJSON(msg);
+                            $("#modalEndPeriod .rubricasInfo tbody").html("");
+                            if(msg.error == 0){
+                                var newRow = '';
+                                $.each(msg.dataRes, function(i, item){
+                                    newRow += '<tr>';
+                                        newRow += '<td><input type="text" id="inputIdRubInfo" name="inputIdRubInfo[]" value="'+msg.dataRes[i].id+'">'+msg.dataRes[i].nombre+'</td>';
+                                        newRow += '<td><input type="number" id="porcRub" name="porcRub[]" class="form-control cantPorc" value="0"></td>';
+                                    newRow += '</tr>';
+                                });
+                                newRow += '<tr><td>Total: </td>'
+                                        +'<td><input type="number" disabled class="form-control" id="inputTotalRub"></td></tr>';
+                                $(newRow).appendTo("#modalEndPeriod .rubricasInfo tbody");
+                            }else{
+                                var newRow = '<tr><td>'+msg.msgErr+'</td><td></td></tr>';
+                                $(newRow).appendTo("#modalEndPeriod .rubricasInfo tbody");
+                            }
+                        }
+                    });
+                });
+                
+                $("#modalEndPeriod .rubricasInfo tbody").on("keyup change blur keypress keydown", ".cantPorc", calcPorc);
+                
+                function calcPorc(){
+                    var totalRub = 0;
+                    $("#modalEndPeriod .rubricasInfo tbody #porcRub").each(function(){
+                        totalRub += parseInt($(this).val());
+                    })
+                    totalRub = totalRub.toFixed(2);
+                    console.log(totalRub);
+                    $("#modalEndPeriod .rubricasInfo tbody #inputTotalRub").val(totalRub);
+                    if(totalRub == 100.00) $("#modalEndPeriod #guardar_datos").removeAttr("disabled");
+                    else $("#modalEndPeriod #guardar_datos").attr("disabled", true);
+                }
+                
+                //Añadir rubrica
+                $('#formEndPeriod').validate({
+                    rules: {
+                        inputName: {required: true},
+                    },
+                    messages: {
+                        inputName: "Nombre obligatorio",
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/update_rubrica_info_porcentajes.php",
+                            data: $('form#formEndPeriod').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalAddRub .divError').css({color: "#77DD77"});
+                                    $('#modalAddRub .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    $('#modalAddRub .divError').css({color: "#FF0000"});
+                                    $('#modalAddRub .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#divError').hide();
+                                    }, 1500);
+                                }
+                            }, error: function(){
+                                alert("Error al crear rubrica.");
                             }
                         });
                     }

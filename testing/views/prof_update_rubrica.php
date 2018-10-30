@@ -26,7 +26,7 @@
                 <section class="content-header">
                     <div class="row">
                         <div class="col-xs-4">
-                            <input type="text" id="inputIdRubrica" name="inputIdRubrica" >
+                            <input type="hidden" id="inputIdRubrica" name="inputIdRubrica" >
                             <label for="inputRubricas">Selecciona la rubrica a Modificar:</label>
                             <select class="form-control" id="inputRubricas" name="inputRubricas"></select>
                         </div>
@@ -49,11 +49,6 @@
                                     <div class="table table-condensed table-hover table-striped">
                                         <table class="table table-striped table-bordered" id="data">
                                             <thead>
-                                                <!-- <tr>
-                                                    <th><span title="grupo">ID</span></th>
-                                                    <th><span title="grupo">Nombre</span></th>
-                                                    <th><span title="grupo">Calificación</span></th>
-                                                </tr> -->
                                             </thead>
                                             <tbody></tbody>
                                         </table>
@@ -128,7 +123,9 @@
                                     newRowTB += '<tr>'
                                     newRowTB += '<td>' + msg2.students[j].nameStudent + '</td>';
                                     $.each(msg2.calRubricas, function(k, item){
-                                        newRowTB += '<td>'+msg2.students[j].cals[k].califRub+'</td>';
+                                        //newRowTB += '<td>'+msg2.students[j].cals[k].califRub+'</td>';
+                                        newRowTB += '<td><input type="hidden" name="inputIdDetCalif[]" id="inputIdDetCalif" value="'+msg2.students[j].cals[k].idDetCalif+'">'
+                                            +'<input type="number" class="form-control" id="inputCalif" name="inputCalif[]" value="'+msg2.students[j].cals[k].califRub+'" min="0" max="10"></td>';
                                     })
                                     newRowTB += '</tr>';
                                 });
@@ -137,38 +134,16 @@
                                 var newRow = '<tr><td colspan="3">' + msg2.msgErr + '</td></tr>';
                                 $("#data thead").html(newRow);
                             }
-                            
-                            /*var msg2 = jQuery.parseJSON(msg2);
-                            if (msg2.error == 0) {
-                                $("#data tbody").html("");
-                                $.each(msg2.dataRes, function (i, item){
-                                    var newRow = '<tr>'
-                                        + '<td><input type="text" id="inputIdAlum" name="inputIdAlum[]" value="'+msg2.dataRes[i].idStudent+'" >'
-                                        + msg2.dataRes[i].idStudent + '</td>'
-                                        + '<td>' + msg2.dataRes[i].nameStudent + '</td>'
-                                        + '<td><input type="number" id="inputCalif" name="inputCalif[]" class="form-control" value="10"></td>';
-                                    $(newRow).appendTo("#data tbody");
-                                });
-                            }else{
-                                var newRow = '<tr><td colspan="3">' + msg2.msgErr + '</td></tr>';
-                                $("#data tbody").html(newRow);
-                            }*/
                         }
                     });
                 });
                 
-                //Añadir rubrica
+                //Actualizar rubrica
                 $('#formCalifRub').validate({
                     rules: {
-                        inputRubricas: {required: true},
-                        inputNombre: {required: true},
-                        inputFecha: {required: true},
                         'inputCalif[]': {required: true, range: [0, 10], digits: true}
                     },
                     messages: {
-                        inputRubricas: "Rubrica a evaluar obligatoria",
-                        inputNombre: "Nombre de la rubrica obligatorio",
-                        inputFecha: "Fecha de evaluación obligatoria",
                         'inputCalif[]': {
                                 required: "Calificación del alumno obligatoria", 
                                 range: "Solo números entre 0 y 10", 
@@ -176,15 +151,12 @@
                         }
                     },
                     tooltip_options:{
-                        inputRubricas: {trigger: "focus", placement: "bottom"},
-                        inputNombre: {trigger: "focus", placement: "bottom"},
-                        inputFecha: {trigger: "focus", placement: "bottom"},
                         'inputCalif[]': {trigger: "focus", placement: "bottom"}
                     },
                     submitHandler: function(form){
                         $.ajax({
                             type: "POST",
-                            url: "../controllers/create_rubrica_calif.php",
+                            url: "../controllers/update_rubrica_det_calif.php",
                             data: $('form#formCalifRub').serialize(),
                             success: function(msg){
                                 console.log(msg);
@@ -203,7 +175,7 @@
                                     }, 1500);
                                 }
                             }, error: function(){
-                                alert("Error al calificar rubrica.");
+                                alert("Error al actualizar calificaciones.");
                             }
                         });
                     }
