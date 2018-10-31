@@ -12,7 +12,7 @@ $ban = false;
 for($i = 0; $i < $countRubs; $i++) {
     $idRubInfo = $_POST['inputIdRubInfo'][$i];
     $porcRub = $_POST['porcRub'][$i];
-    $sqlUpdateRubInfo = "UPDATE $tRubInfo SET porcentaje = '$porcRub' WHERE id = '$idRubInfo' ";
+    $sqlUpdateRubInfo = "UPDATE $tRubInfo SET porcentaje = '$porcRub', estado_id = '2' WHERE id = '$idRubInfo' ";
     if ($con->query($sqlUpdateRubInfo) === TRUE) {
         $ban = true;
         $cad .= 'Rubrica ' . $idRubInfo . ', actualizada con éxito.';

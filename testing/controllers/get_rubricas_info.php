@@ -9,7 +9,7 @@ $ban = false;
 //$idGMatProf = $_POST['idGMatProf'];
 //$idPeriodo = $_POST['idPeriodo'];
 
-$sqlGetInfoRub = "SELECT $tRubInfo.id, $tRubInfo.nombre, $tRubInfo.porcentaje "
+$sqlGetInfoRub = "SELECT $tRubInfo.id, $tRubInfo.nombre, $tRubInfo.porcentaje, $tRubInfo.estado_id "
         . "FROM $tRubInfo WHERE 1=1 ";
 
 $periodo = (isset($_POST['idPeriodo'])) ? $_POST['idPeriodo'] : "";
@@ -46,8 +46,9 @@ if ($resGetInfoRub->num_rows > 0) {
     while ($rowGetInfoRub = $resGetInfoRub->fetch_assoc()) {
         $id = $rowGetInfoRub['id'];
         $name = $rowGetInfoRub['nombre'];
-        $porc= $rowGetInfoRub['porcentaje'];
-        $rubricas[] = array('id' => $id, 'nombre' => $name, 'porcentaje' => $porc );
+        $porc = $rowGetInfoRub['porcentaje'];
+        $edo = $rowGetInfoRub['estado_id'];
+        $rubricas[] = array('id' => $id, 'nombre' => $name, 'porcentaje' => $porc, 'edo' => $edo );
         $ban = true;
     }
 } else {

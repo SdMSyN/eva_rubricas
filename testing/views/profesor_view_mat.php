@@ -428,11 +428,17 @@
                                 $.each(msg.dataRes, function(i, item){
                                     newRow += '<tr>';
                                         newRow += '<td><input type="text" id="inputIdRubInfo" name="inputIdRubInfo[]" value="'+msg.dataRes[i].id+'">'+msg.dataRes[i].nombre+'</td>';
-                                        newRow += '<td><input type="number" id="porcRub" name="porcRub[]" class="form-control cantPorc" value="0"></td>';
+                                        if(msg.dataRes[i].edo == 1)
+                                            newRow += '<td><input type="number" id="porcRub" name="porcRub[]" class="form-control cantPorc" value="0"></td>';
+                                        else
+                                            newRow += '<td><input type="number" id="porcRub" name="porcRub[]" class="form-control " value="'+msg.dataRes[i].porcentaje+'" readonly></td>';
                                     newRow += '</tr>';
                                 });
-                                newRow += '<tr><td>Total: </td>'
-                                        +'<td><input type="number" disabled class="form-control" id="inputTotalRub"></td></tr>';
+                                newRow += '<tr><td>Total: </td>';
+                                if(msg.dataRes[0].edo == 1)
+                                    newRow += '<td><input type="number" disabled class="form-control" id="inputTotalRub"></td></tr>';
+                                else
+                                    newRow += '<td><input type="number" disabled class="form-control" id="inputTotalRub" value="100.00"></td></tr>';
                                 $(newRow).appendTo("#modalEndPeriod .rubricasInfo tbody");
                             }else{
                                 var newRow = '<tr><td>'+msg.msgErr+'</td><td></td></tr>';
@@ -455,8 +461,7 @@
                     if(totalRub == 100.00) $("#modalEndPeriod #guardar_datos").removeAttr("disabled");
                     else $("#modalEndPeriod #guardar_datos").attr("disabled", true);
                 }
-                
-                //Añadir rubrica
+                //Terminar periodo
                 $('#formEndPeriod').validate({
                     rules: {
                         'porcRub[]': {required: true, range: [0, 100], digits: true}
