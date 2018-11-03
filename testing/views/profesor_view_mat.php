@@ -16,6 +16,7 @@
         $idGMatProf = $_GET['idGMatProf'];
         $idGrupo = $_GET['idGrupo'];
         $idPeriodo = $_GET['idPeriodo'];
+        $nameMat = $_GET['nameMat'];
         ?>
 
         <!-- Content Wrapper. Contains page content -->
@@ -76,8 +77,8 @@
                                     <p class="divError"></p>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="text" id="inputIdPeriodo" name="inputIdPeriodo" >
-                                    <input type="text" id="inputIdGMatProf" name="inputIdGMatProf" >
+                                    <input type="hidden" id="inputIdPeriodo" name="inputIdPeriodo" >
+                                    <input type="hidden" id="inputIdGMatProf" name="inputIdGMatProf" >
                                     <div class="form-group">
                                         <label for="inputMat" class="col-sm-3 control-label">Rubrica: </label>
                                         <div class="col-sm-9">
@@ -106,7 +107,7 @@
                                     <p class="divError"></p>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="text" id="inputIdRubrica" name="inputIdRubrica" >
+                                    <input type="hidden" id="inputIdRubrica" name="inputIdRubrica" >
                                     <div class="form-group">
                                         <label for="inputMat" class="col-sm-3 control-label">Rubrica: </label>
                                         <div class="col-sm-9">
@@ -165,7 +166,7 @@
                     <div class="col-md-12">
                         <div class="box">
                             <div class="box-header with-border">
-                                <h3 class="box-title">Periodos de la materia: NOMBRE</h3>
+                                <h3 class="box-title">Periodos de la materia: <span class="txtTitle"><?=$nameMat;?></span></h3>
                                 <div class="divError"></div>
                             </div>
                             <div class="box-body">
@@ -198,6 +199,11 @@
             $(".loader").hide();
             var ordenar = '';
             $(document).ready(function () {
+                /*$.ajax({
+                    type: "POST",
+                    data: {idMat: <?= $id?>}
+                })*/
+                
                 filtrar();
                 function filtrar() {
                     $(".loader").show();
@@ -277,13 +283,13 @@
                 
                 //Cargar rubricas a ventana modal
                 $("#data").on("click", "#verRubrica", function(){
-                    var idPeriodo = $(this).data("value");
+                    var idPeriodoFecha = $(this).data("value");
                     //$("#modalViewMats #addMat .buttonAddMat").data("whatever", idGrupo);
-                    $("#modalViewRub .buttonAddRub").html('<button type="button" class="btn btn-danger" id="addRub" data-toggle="modal" data-target="#modalAddRub" data-whatever="'+idPeriodo+'" >Crear Rubrica</button>');
-                    console.log(idPeriodo);
+                    $("#modalViewRub .buttonAddRub").html('<button type="button" class="btn btn-danger" id="addRub" data-toggle="modal" data-target="#modalAddRub" data-whatever="'+idPeriodoFecha+'" >Crear Rubrica</button>');
+                    console.log(idPeriodoFecha);
                     $.ajax({
                         type: "POST",
-                        data: {idGMatProf: <?= $idGMatProf; ?>, idPeriodo: idPeriodo},
+                        data: {idGMatProf: <?= $idGMatProf; ?>, idPeriodoFecha: idPeriodoFecha},
                         url: "../controllers/get_rubricas_info.php",
                         success: function(msg){
                             var msg = jQuery.parseJSON(msg);
@@ -416,11 +422,11 @@
                 
                 //Terminar periodo
                 $("#data").on("click", "#endRubrica", function(){
-                    var idPeriodo = $(this).data("value");
-                    console.log(idPeriodo);
+                    var idPeriodoFecha = $(this).data("value");
+                    console.log(idPeriodoFecha);
                     $.ajax({
                         type: "POST",
-                        data: {idGMatProf: <?= $idGMatProf; ?>, idPeriodo: idPeriodo},
+                        data: {idGMatProf: <?= $idGMatProf; ?>, idPeriodoFecha: idPeriodoFecha},
                         url: "../controllers/get_rubricas_info.php",
                         success: function(msg){
                             var msg = jQuery.parseJSON(msg);
@@ -429,7 +435,7 @@
                                 var newRow = '';
                                 $.each(msg.dataRes, function(i, item){
                                     newRow += '<tr>';
-                                        newRow += '<td><input type="text" id="inputIdRubInfo" name="inputIdRubInfo[]" value="'+msg.dataRes[i].id+'">'+msg.dataRes[i].nombre+'</td>';
+                                        newRow += '<td><input type="hidden" id="inputIdRubInfo" name="inputIdRubInfo[]" value="'+msg.dataRes[i].id+'">'+msg.dataRes[i].nombre+'</td>';
                                         if(msg.dataRes[i].edo == 1)
                                             newRow += '<td><input type="number" id="porcRub" name="porcRub[]" class="form-control cantPorc" value="0"></td>';
                                         else

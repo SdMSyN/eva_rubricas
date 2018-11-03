@@ -94,7 +94,8 @@
                                 $.each(msg.dataRes, function (i, item) {
                                     var newRow = '<tr class="verMat" data-href="'+msg.dataRes[i].id+'" '
                                             + 'data-grupo="'+msg.dataRes[i].idGrupo+'" '
-                                            + 'data-periodo="'+msg.dataRes[i].idPeriodo+'" >'
+                                            + 'data-periodo="'+msg.dataRes[i].idPeriodo+'" '
+                                            + 'data-namemat="'+msg.dataRes[i].materia+'" >'
                                             + '<td>' + msg.dataRes[i].materia + '</td>'
                                             + '<td>' + msg.dataRes[i].grupo + '</td>'
                                             + '<td>' + msg.dataRes[i].grado + '</td>'
@@ -150,8 +151,9 @@
                    var idGMatProf = $(this).data("href");
                    var idGrupo = $(this).data("grupo");
                    var idPeriodo = $(this).data("periodo");
+                   var nameMat = $(this).data("namemat");
                    console.log(idGMatProf);
-                   location.href = "profesor_view_mat.php?idGMatProf="+idGMatProf+"&idGrupo="+idGrupo+"&idPeriodo="+idPeriodo;
+                   location.href = "profesor_view_mat.php?idGMatProf="+idGMatProf+"&idGrupo="+idGrupo+"&idPeriodo="+idPeriodo+"&nameMat="+nameMat;
                 });
                 
             });

@@ -26,7 +26,7 @@
                 <section class="content-header">
                     <div class="row">
                         <div class="col-xs-3">
-                            <input type="text" id="inputIdRubrica" name="inputIdRubrica" >
+                            <input type="hidden" id="inputIdRubrica" name="inputIdRubrica" >
                             <label for="inputRubricas">Selecciona la rubrica a Evaluar:</label>
                             <select class="form-control" id="inputRubricas" name="inputRubricas"></select>
                         </div>
@@ -87,7 +87,7 @@
                 
                 $.ajax({
                     type: "POST",
-                    data: {idPeriodo: <?=$idPeriodo;?>, idGMatProf: <?=$idGMatProf; ?>},
+                    data: {idPeriodoFecha: <?=$idPeriodoFecha;?>, idGMatProf: <?=$idGMatProf; ?>},
                     url: "../controllers/get_rubricas_info.php",
                     success: function(msg){
                         console.log(msg);
@@ -112,7 +112,7 @@
                                         $("#data tbody").html("");
                                         $.each(msg2.dataRes, function (i, item){
                                             var newRow = '<tr>'
-                                                + '<td><input type="text" id="inputIdAlum" name="inputIdAlum[]" value="'+msg2.dataRes[i].idStudent+'" >'
+                                                + '<td><input type="hidden" id="inputIdAlum" name="inputIdAlum[]" value="'+msg2.dataRes[i].idStudent+'" >'
                                                 + msg2.dataRes[i].idStudent + '</td>'
                                                 + '<td>' + msg2.dataRes[i].nameStudent + '</td>'
                                                 + '<td><input type="number" id="inputCalif" name="inputCalif[]" value="10" style="display: none; " class="form-control inputCalif"></td>';
