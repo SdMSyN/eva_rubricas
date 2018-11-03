@@ -226,7 +226,9 @@
                                                 + '&idGrupo=' + <?=$idGrupo;?> + '&idPeriodo=' + <?=$idPeriodo;?> 
                                                 + '&idPeriodoFecha=' + msg.dataRes[i].id + '"><i class="fa fa-edit"></i> Modificar Rubrica</a></li>'
                                             + '<li><a href="#" data-toggle="modal" data-target="#modalEndPeriod" id="endRubrica" data-value="'+msg.dataRes[i].id+'"><i class="fa fa-hourglass-end"></i> Terminar periodo</a></li>'
-                                            + '<li><a href="#"><i class="fa fa-eye"></i> Ver calificaciones</a></li>'
+                                            + '<li><a href="prof_view_rubricas_cal.php?idGMatProf='+<?=$idGMatProf;?>
+                                                + '&idGrupo=' + <?=$idGrupo;?> + '&idPeriodo=' + <?=$idPeriodo;?> 
+                                                + '&idPeriodoFecha=' + msg.dataRes[i].id + '"><i class="fa fa-eye"></i> Ver calificaciones</a></li>'
                                             + '</ul></div></td>'
                                             + '</tr>';
                                     $(newRow).appendTo("#data tbody");

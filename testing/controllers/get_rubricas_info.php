@@ -12,12 +12,12 @@ $ban = false;
 $sqlGetInfoRub = "SELECT $tRubInfo.id, $tRubInfo.nombre, $tRubInfo.porcentaje, $tRubInfo.estado_id "
         . "FROM $tRubInfo WHERE 1=1 ";
 
-$periodo = (isset($_POST['idPeriodo'])) ? $_POST['idPeriodo'] : "";
-if($periodo != ''){
+$periodoFecha = (isset($_POST['idPeriodoFecha'])) ? $_POST['idPeriodoFecha'] : "";
+if($periodoFecha != ''){
     $idGMatProf = $_POST['idGMatProf'];
-    $idPeriodo = $_POST['idPeriodo'];
+    $idPeriodoFecha = $_POST['idPeriodoFecha'];
     $sqlGetInfoRub .= " AND $tRubInfo.grupo_mat_prof_id = '$idGMatProf' "
-            . "AND $tRubInfo.periodo_fecha_id = '$idPeriodo' ";
+            . "AND $tRubInfo.periodo_fecha_id = '$idPeriodoFecha' ";
 }
 
 $idRubrica = (isset($_POST['idRubrica'])) ? $_POST['idRubrica'] : "";

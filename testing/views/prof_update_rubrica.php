@@ -73,7 +73,7 @@
                 
                 $.ajax({
                     type: "POST",
-                    data: {idPeriodo: <?=$idPeriodo;?>, idGMatProf: <?=$idGMatProf; ?>},
+                    data: {idPeriodoFecha: <?=$idPeriodoFecha;?>, idGMatProf: <?=$idGMatProf; ?>},
                     url: "../controllers/get_rubricas_info.php",
                     success: function(msg){
                         console.log(msg);
