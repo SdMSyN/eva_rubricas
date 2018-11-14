@@ -3,6 +3,9 @@
 include('../config/conexion.php');
 include('../config/variables.php');
 
+$userId = $_POST['inputUserId'];
+$periodoFechaId = $_POST['inputPeriodoFecha'];
+$gMatProfId = $_POST['inputGMatProf'];
 $countRubs = count($_POST['inputIdRubInfo']);
 
 $cad = '';

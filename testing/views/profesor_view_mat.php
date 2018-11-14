@@ -136,9 +136,10 @@
                                     <p class="divError"></p>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row text-center buttonAddRub">
-                                    </div>
-                                    <br>
+                                    <input id="inputUserId" name="inputUserId" >
+                                    <input id="inputPeriodoFecha" name="inputPeriodoFecha" >
+                                    <input id="inputGMatProf" name="inputGMatProf" >
+                                    
                                     <table class="table table-striped rubricasInfo">
                                         <thead>
                                             <tr><th>Nombre</th><th>%</th></tr>
@@ -199,11 +200,6 @@
             $(".loader").hide();
             var ordenar = '';
             $(document).ready(function () {
-                /*$.ajax({
-                    type: "POST",
-                    data: {idMat: <?= $id?>}
-                })*/
-                
                 filtrar();
                 function filtrar() {
                     $(".loader").show();
@@ -423,6 +419,9 @@
                 //Terminar periodo
                 $("#data").on("click", "#endRubrica", function(){
                     var idPeriodoFecha = $(this).data("value");
+                    $("#modalEndPeriod #inputUserId").val(<?= $idUser; ?>);
+                    $("#modalEndPeriod #inputPeriodoFecha").val(idPeriodoFecha);
+                    $("#modalEndPeriod #inputGMatProf").val(<?= $idGMatProf; ?>);
                     console.log(idPeriodoFecha);
                     $.ajax({
                         type: "POST",
