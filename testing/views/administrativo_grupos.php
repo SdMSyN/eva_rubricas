@@ -266,7 +266,8 @@
                                             + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >Acciones <span class="fa fa-caret-down"></span></button>'
                                             + '<ul class="dropdown-menu">'
                                             + '<li id="viewMats" value="'+msg.dataRes[i].id+'" data-toggle="modal" data-target="#modalViewMats"><a href="#" ><i class="fa fa-book "></i> Ver materias</a></li>'
-                                            + '<li id="viewStudents" value="'+msg.dataRes[i].id+'" data-toggle="modal" data-target="#modalViewStudents" ><a href="#"><i class="fa fa-graduation-cap"></i> Ver alumnos</a></li>';
+                                            + '<li id="viewStudents" value="'+msg.dataRes[i].id+'" data-toggle="modal" data-target="#modalViewStudents" ><a href="#"><i class="fa fa-graduation-cap"></i> Ver alumnos</a></li>'
+                                            + '<li><a href="administrativo_view_cal_group.php?idGrupo='+msg.dataRes[i].id+'&idPerInfo='+msg.dataRes[i].perInfoId+'"><i class="fa fa-eye"></i> Ver Calificaciones</a></li>'
                                             + '</ul></div></td>'
                                             + '</tr>';
                                     $(newRow).appendTo("#data tbody");

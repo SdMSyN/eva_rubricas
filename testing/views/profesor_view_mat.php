@@ -139,6 +139,7 @@
                                     <input id="inputUserId" name="inputUserId" >
                                     <input id="inputPeriodoFecha" name="inputPeriodoFecha" >
                                     <input id="inputGMatProf" name="inputGMatProf" >
+                                    <input id="inputIdGrupo" name="inputIdGrupo" >
                                     
                                     <table class="table table-striped rubricasInfo">
                                         <thead>
@@ -422,6 +423,7 @@
                     $("#modalEndPeriod #inputUserId").val(<?= $idUser; ?>);
                     $("#modalEndPeriod #inputPeriodoFecha").val(idPeriodoFecha);
                     $("#modalEndPeriod #inputGMatProf").val(<?= $idGMatProf; ?>);
+                    $("#modalEndPeriod #inputIdGrupo").val(<?= $idGrupo; ?>);
                     console.log(idPeriodoFecha);
                     $.ajax({
                         type: "POST",

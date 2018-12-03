@@ -7,7 +7,8 @@ $msgErr = '';
 $ban = false;
 
 $sqlGetGrupo = "SELECT $tGInfo.id as idGrupo, $tGInfo.nombre as grupo, $tTurn.nombre as turno, "
-        . "$tGrade.nombre as grado, $tGInfo.year as year, $tPlanEst.nombre as planEst "
+        . "$tGrade.nombre as grado, $tGInfo.year as year, $tPlanEst.nombre as planEst, "
+        . "$tGInfo.periodo_info_id "
         . "FROM $tGInfo "
         . "INNER JOIN $tGrade ON $tGrade.id = $tGInfo.nivel_grado_id "
         . "INNER JOIN $tTurn ON $tTurn.id = $tGInfo.nivel_turno_id "
@@ -40,8 +41,9 @@ if ($resGetGrupo->num_rows > 0) {
         $grado = $rowGetGrupo['grado'];
         $year = $rowGetGrupo['year'];
         $planEst = $rowGetGrupo['planEst'];
+        $perInfoId = $rowGetGrupo['periodo_info_id'];
         $grupos[] = array('id'=>$id, 'grupo' => $grupo, 'turno' => $turno, 
-            'grado'=>$grado, 'year'=>$year, 'planEst'=>$planEst);
+            'grado'=>$grado, 'year'=>$year, 'planEst'=>$planEst, 'perInfoId'=>$perInfoId);
         $ban = true;
         $msgErr = 'Grupos hallados.';
     }
