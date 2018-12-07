@@ -264,6 +264,35 @@
                 </form><!-- ./form -->
                 <!-- fin modal -->
                 
+                <!-- modal actualizar asignación de materias -->
+                <form class="form-horizontal" id="formUpdStudent" name="formUpdStudent">
+                    <div class="modal fade" id="modalUpdStudent" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Actualizar alumno</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="inputIdStudent" name="inputIdStudent" >
+                                    <div class="form-group">
+                                        <label for="inputStudent" class="col-sm-3 control-label">Alumno: </label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="inputStudent" name="inputStudent" >
+                                        </div>
+                                    </div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Actualizar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form><!-- ./form -->
+                <!-- fin modal -->
+                
             </section>
 
             <!-- Main content -->
@@ -677,6 +706,13 @@
                                     newRow += '<tr>';
                                         newRow += '<td>'+(i+1)+'</td>';
                                         newRow += '<td>'+msg.dataRes[i].nameStudent+'</td>';
+                                        newRow += '<td>'
+                                                +'<button type="button" class="btn btn-primary" id="updStudent" data-whatever="'+msg.dataRes[i].idStudent+'" data-toggle="modal" data-target="#modalUpdStudent">'
+                                                    +'Actualizar alumno'
+                                                +'</button></td>';
+                                        newRow += '<td>'
+                                                 +'<button type="button" class="btn btn-danger" id="deleteStudent" value="'+msg.dataRes[i].idStudent+'"><span class="glyphicon glyphicon-remove"></span></button>'
+                                                  +'</td>';
                                     newRow += '</tr>';
                                 });
                                 $(newRow).appendTo("#modalViewStudents .students tbody");
@@ -843,6 +879,81 @@
                          });
                      }
                  }); // end añadir nuevo grupo
+                
+                //Actualizar alumno
+                $("#modalViewStudents").on("click", "#updStudent", function(){
+                    var idStudent = $(this).data("whatever");
+                    $("#modalUpdStudent .modal-body #inputIdStudent").val(idStudent);
+                    console.log("Alumno: "+idStudent);
+                    $.ajax({
+                        type: "POST",
+                        data: {idStudent: idStudent},
+                        url: "../controllers/get_alumnos.php",
+                        success: function(msg){
+                            console.log(msg);
+                            var msg = jQuery.parseJSON(msg);
+                            $("#modalUpdStudent .modal-body #inputMat").html("");
+                            if(msg.error == 0){
+                                $("#modalUpdStudent .modal-body #inputStudent").val(msg.dataRes[0].nameStudent)
+                            }else{
+                                $("#modalUpdStudent .modal-body #inputStudent").html(msg.msgErr);
+                            }
+                        },
+                        error: function (x, e) {
+                            var cadErr = '';
+                            if (x.status == 0) {
+                                cadErr = '¡Estas desconectado!\n Por favor checa tu conexión a Internet.';
+                            } else if (x.status == 404) {
+                                cadErr = 'Página no encontrada.';
+                            } else if (x.status == 500) {
+                                cadErr = 'Error interno del servidor.';
+                            } else if (e == 'parsererror') {
+                                cadErr = 'Error.\nFalló la respuesta JSON.';
+                            } else if (e == 'timeout') {
+                                cadErr = 'Tiempo de respuesta excedido.';
+                            } else {
+                                cadErr = 'Error desconocido.\n' + x.responseText;
+                            }
+                            alert(cadErr);
+                        }
+                    });
+                });
+                
+                //Actualizar alumno validación
+                $('#formUpdStudent').validate({
+                    rules: {
+                        inputStudent: {required: true}
+                    },
+                    messages: {
+                        inputStudent: "Nombre del alumno obligatorio"
+                    },
+                    submitHandler: function(form){
+                        $.ajax({
+                            type: "POST",
+                            url: "../controllers/update_alumno.php",
+                            data: $('form#formUpdStudent').serialize(),
+                            success: function(msg){
+                                console.log(msg);
+                                var msg = jQuery.parseJSON(msg);
+                                if(msg.error == 0){
+                                    $('#modalUpdStudent .divError').css({color: "#77DD77"});
+                                    $('#modalUpdStudent .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 2000);
+                                }else{
+                                    $('#modalUpdStudent .divError').css({color: "#FF0000"});
+                                    $('#modalUpdStudent .divError').html(msg.msgErr);
+                                    setTimeout(function () {
+                                      $('#modalUpdStudent .divError').hide();
+                                    }, 2000);
+                                }
+                            }, error: function(){
+                                alert("Error al actualizar alumno.");
+                            }
+                        });
+                    }
+                }); // end añadir nuevo cargo
                 
             });
             
