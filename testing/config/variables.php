@@ -7,5 +7,6 @@
     $dataTimeNow = date("Y-m-d H:i");
     $year = date("Y");
     $folderUpPerfil = "../uploads/perfil/";
+    $csvUploads = "../uploads/csv/";
 	
 ?>

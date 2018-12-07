@@ -228,6 +228,41 @@
                 </div><!-- ./modal fade -->
                 <!-- fin modal -->
                 
+                <!-- modal exportar grupo -->
+                <form class="form-horizontal" id="formImportStudent" name="formImportStudent">
+                    <div class="modal fade" id="modalImportStudent" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Exportar Alumnos</h4>
+                                    <p class="divError"></p>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="inputIdGrupo" name="inputIdGrupo" >
+                                    <div class="form-group">
+                                        <label for="inputFile" for="inputFile" class="col-sm-4 control-label">Archivo CSV 
+                                            <a href="#" data-toggle="tooltip" title="Archivo Excel en formato CSV (archivo separado por comas), 3 o 4 campos: Apellido paterno, Apellido Materno, Nombre(s) y Usuario [opcional]">
+                                                <span class="glyphicon glyphicon-question-sign"></span>
+                                            </a>
+                                            <a href="../uploads/plantillaGrupo.csv" data-toggle="tooltip" title="Descargar formato">
+                                                <span class="glyphicon glyphicon-download-alt"></span>
+                                            </a>
+                                            : </label>
+                                        <div class="col-sm-8">
+                                            <input type="file" class="form-control" id="inputFile" name="inputFile" >
+                                        </div>
+                                    </div>
+                                </div><!-- ./modal-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" id="guardar_datos" class="btn btn-primary">Importar</button>
+                                </div><!-- ./modal-footer -->
+                            </div><!-- ./modal-content -->
+                        </div><!-- ./modal-dialog -->
+                    </div><!-- ./modal fade -->
+                </form><!-- ./form -->
+                <!-- fin modal -->
                 
             </section>
 
@@ -755,6 +790,59 @@
                         }
                     });
                 })
+                
+                //Importar alumno, añadir grupo
+                $("#modalViewStudents").on("click", "#importStudent", function(){
+                    var idGrupo = $(this).data("grupo");
+                    $("#modalImportStudent .modal-body #inputIdGrupo").val(idGrupo);
+                    console.log("Grupo: "+idGrupo);
+                });
+                
+                //añadir nuevo grupo
+                $('#formImportStudent').validate({
+                     rules: {
+                         inputFile: {required: true, extension: "csv"}
+                     },
+                     messages: {
+                         inputFile: { 
+                             required: "Se requiere un archivo",
+                             extension: "Solo se permite archivos *.csv (archivo separado por comas de Excel)"
+                         }
+                     },
+                     tooltip_options: {
+                         inputFile: {trigger: "focus", placement: "bottom"}
+                     },
+                     submitHandler: function(form){
+                         $('#loading').show();
+                         $.ajax({
+                             type: "POST",
+                             url: "../controllers/import_grupo.php",
+                             data: new FormData($("form#formImportStudent")[0]),
+                             //data: $('form#formAdd').serialize(),
+                             contentType: false,
+                             processData: false,
+                             success: function(msg){
+                                 console.log(msg);
+                                 var msg = jQuery.parseJSON(msg);
+                                 if(msg.error == 0){
+                                     $('#modalImportStudent .divError').css({color: "#77DD77"});
+                                     $('#modalImportStudent .divError').html(msg.msgErr);
+                                     setTimeout(function () {
+                                       location.reload();
+                                     }, 1500);
+                                 }else{
+                                     $('#modalImportStudent .divError').css({color: "#FF0000"});
+                                     $('#modalImportStudent .divError').html(msg.msgErr);
+                                     setTimeout(function () {
+                                       $('#modalImportStudent .divError').hide();
+                                     }, 2500);
+                                 }
+                             }, error: function(){
+                                 alert("Error al importar grupo");
+                             }
+                         });
+                     }
+                 }); // end añadir nuevo grupo
                 
             });
             
