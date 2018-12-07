@@ -1,0 +1,83 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title></title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="jquery.typeahead.css">
+
+    <script src="jquery.js"></script>
+    <script src="bootstrap.js"></script>
+    <script src="typeahead.bundle.js"></script>
+
+</head>
+<body>
+
+<div style="width: 100%; max-width: 800px; margin: 0 auto;">
+
+    <h1>Beer_v1 Demo</h1>
+		
+    <form>
+        <div class="typeahead__container">
+					<div class="typeahead__query">
+						<input type="text" class="typeahead" data-provide="typeahead">
+					</div>
+        </div>
+    </form>
+
+    <script>
+
+			// instantiate the bloodhound suggestion engine
+			/*var numbers = new Bloodhound({
+				datumTokenizer: Bloodhound.tokenizers.whitespace,
+				queryTokenizer: Bloodhound.tokenizers.whitespace,
+				local:  ["(A)labama","Alaska","Arizona","Arkansas","Arkansas2","Barkansas"]
+			});
+
+			// initialize the bloodhound suggestion engine
+			numbers.initialize();
+
+			$('.typeahead').typeahead({
+        highlight: true
+      },
+      {
+        source: numbers
+      });*/
+			
+			// Instantiate the Bloodhound suggestion engine
+var movies = new Bloodhound({
+  datumTokenizer: function(datum) {
+    return Bloodhound.tokenizers.whitespace(datum.value);
+  },
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  remote: {
+    wildcard: '%QUERY',
+    url: 'http://api.themoviedb.org/3/search/movie?query=%QUERY&api_key=f22e6ce68f5e5002e71c20bcba477e7d',
+    transform: function(response) {
+      // Map the remote source JSON array to a JavaScript object array
+      return $.map(response.results, function(movie) {
+        return {
+          value: movie.original_title
+        };
+      });
+    }
+  }
+});
+
+// Instantiate the Typeahead UI
+$('.typeahead').typeahead(null, {
+  display: 'value',
+  source: movies
+});
+
+
+    </script>
+
+</div>
+
+</body>
+</html>

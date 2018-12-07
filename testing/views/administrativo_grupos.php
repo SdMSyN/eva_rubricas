@@ -21,7 +21,7 @@
                 <div class="row">
                     <div class="col-xs-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Buscar por nombre" id="buscar" >
+                            <input class="typeahead form-control" name="q" type="search" autofocus autocomplete="off" id="q">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" onclick="load(1);"><i class="fa fa-search"></i></button>
                             </span>
@@ -200,6 +200,35 @@
                     </div><!-- ./modal fade -->
                 </form><!-- ./form -->
                 <!-- fin modal -->
+                
+                <!-- modal buscar y añadir alumno -->
+                <div class="modal fade" id="modalSearchStudent" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Buscar Alumno</h4>
+                                <p class="divError"></p>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" id="inputIdGrupo" name="inputIdGrupo" >
+                                <div class="form-group row">
+                                    <label for="inputSearchStudent" class="col-sm-2 control-label">Buscar: </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="inputSearchStudent" name="inputSearchStudent" class="form-control searchStudent">
+                                    </div> 
+                                </div>
+                            </div><!-- ./modal-body -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" id="searchStudent" class="btn btn-primary">Añadir</button>
+                            </div><!-- ./modal-footer -->
+                        </div><!-- ./modal-content -->
+                    </div><!-- ./modal-dialog -->
+                </div><!-- ./modal fade -->
+                <!-- fin modal -->
+                
+                
             </section>
 
             <!-- Main content -->
@@ -631,7 +660,7 @@
                     console.log("studiante: "+idGrupo);
                 });
                 
-                //Asignar materia y profesor
+                //Asignar nuevo alumno
                 $('#formAddStudent').validate({
                     rules: {
                         inputAP: {required: true},
@@ -670,7 +699,66 @@
                         });
                     }
                 }); // end añadir nuevo cargo
+                
+                //Buscar alumno async                
+                var students = new Bloodhound({
+                    datumTokenizer: function(datum) {
+                      return Bloodhound.tokenizers.whitespace(datum.value);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        wildcard: '%QUERY',
+                        url: '../controllers/search_student.php?query=%QUERY',
+                    }
+                  });
+
+                // Instantiate the Typeahead UI
+                $('#modalSearchStudent .modal-body .searchStudent').typeahead(null, {
+                    display: 'name',
+                    source: students,
+                    limit: 8
+                  });
+
+                //Buscar alumno, añadir grupo
+                $("#modalViewStudents").on("click", "#searchStudent", function(){
+                    var idGrupo = $(this).data("grupo");
+                    $("#modalSearchStudent .modal-body #inputIdGrupo").val(idGrupo);
+                    console.log("Grupo: "+idGrupo);
+                });
+                
+                //Añadir alumno mediante busqueda
+                $("#modalSearchStudent").on("click", "#searchStudent", function(){
+                    var queryStudent = $("#modalSearchStudent #inputSearchStudent").val();
+                    var idGrupo = $("#modalSearchStudent #inputIdGrupo").val();
+                    console.log("Grupo:"+idGrupo+"- Student: "+queryStudent);
+                    $.ajax({
+                        type: "POST",
+                        data: {idGrupo: idGrupo, nameStudent: queryStudent},
+                        url: "../controllers/insert_alumno_busqueda.php",
+                        success: function(msg){
+                            console.log(msg);
+                            var msg = jQuery.parseJSON(msg);
+                            if(msg.error == 0){
+                                $('#modalSearchStudent .divError').css({color: "#77DD77"});
+                                $('#modalSearchStudent .divError').html(msg.msgErr);
+                                setTimeout(function () {
+                                  location.reload();
+                                }, 1500);
+                            }else{
+                                $('#modalSearchStudent .divError').show();
+                                $('#modalSearchStudent .divError').css({color: "#FF0000"});
+                                $('#modalSearchStudent .divError').html(msg.msgErr);
+                                setTimeout(function () {
+                                  $('#modalSearchStudent .divError').hide();
+                                }, 1500);
+                            }
+                        }
+                    });
+                })
+                
             });
+            
+            
         </script>
 
         <?php
