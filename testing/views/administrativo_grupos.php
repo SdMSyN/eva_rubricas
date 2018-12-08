@@ -955,6 +955,34 @@
                     }
                 }); // end añadir nuevo cargo
                 
+                //Eliminar alumno
+                $("#modalViewStudents").on("click", "#deleteStudent", function(){
+                    var idStudent = $(this).val();
+                    console.log("Alumno: "+idStudent);
+                    if(confirm("¿Seguro que deseas eliminar este alumno? Se borrará de forma definida")){
+                        $.ajax({
+                             method: "POST",
+                             data: {idStudent: idStudent},
+                             url: "../controllers/delete_alumno.php",
+                             success: function(data){
+                                console.log(data);
+                                var msg = jQuery.parseJSON(data);
+                                if(msg.error == 0){
+                                    setTimeout(function () {
+                                      location.reload();
+                                    }, 1500);
+                                }else{
+                                    setTimeout(function () {
+                                        
+                                    }, 1500);
+                                }
+                             }
+                         })
+                    }else{
+                        alert("Ten cuidado.");
+                    }
+                });
+                
             });
             
             

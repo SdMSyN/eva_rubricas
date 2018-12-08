@@ -10,7 +10,8 @@ $idGrupo = $_POST['idGrupo'];
 $sqlGetStudents = "SELECT $tUsers.id as idStudent, $tUsers.nombre as nameStudent "
         . "FROM $tGAlum "
         . "INNER JOIN $tUsers ON $tUsers.id = $tGAlum.user_alumno_id "
-        . "WHERE $tGAlum.grupo_info_id = '$idGrupo' ORDER BY nameStudent ";
+        . "WHERE $tGAlum.grupo_info_id = '$idGrupo' AND $tUsers.estado_id = '1' "
+        . "ORDER BY nameStudent ";
 
 /*
 $query = (isset($_POST['query'])) ? $_POST['query'] : "";
