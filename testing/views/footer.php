@@ -8,7 +8,7 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- jQuery 3 -->
+  <!-- jQuery 3 -->
 <script src="../components/jquery/dist/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="../components/jquery-ui/jquery-ui.min.js"></script>
@@ -23,4 +23,6 @@
 <!-- validación de formularios -->
 <script src="../dist/js/jquery.validate.min.js"></script>
 <script src="../dist/js/additional-methods.min.js"></script>
-<!-- <script src="../dist/js/jquery-validate.bootstrap-tooltip.min.js"></script> -->
+<script src="../dist/js/jquery-validate.bootstrap-tooltip.min.js"></script>
+<!-- TypeAHead -->
+<script src="../components/typeahead/typeahead.bundle.js"></script>

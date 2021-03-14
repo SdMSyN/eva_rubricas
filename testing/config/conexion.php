@@ -15,11 +15,13 @@ $tUsers = "usuarios";
 $tUPerfil = "perfiles"; //[Director, Administrativo, Profesor, Alumno, Tutor]
 $tEdos = "estados"; //[Activo, Desactivo]
 $tInfo = "usuarios_informacion";
+
 //Tablas Bancos
 $tNivEsc = "banco_niveles_escolares";
 $tTurn = "banco_nivel_turnos";
 $tGrade = "banco_niveles_grados";
 $tMats = "banco_materias";
+
 //Grupos
 $tGInfo = "grupos_info";
 $tGAlum = "grupos_alumnos";
@@ -27,4 +29,15 @@ $tGMatProf = "grupos_mat_prof";
 $tGMatAlum = "grupos_mat_alum";
 
 $tPlanEst = "planes_estudios";
+//Tablas periodos
+$tPerInfo = "periodo_info";
+$tPerFecha = "periodo_fecha";
+$tPerRubCalif = "periodo_rubrica_calif";
+$tPerMatProm = "periodo_mat_prom";
+
+//Tablas rubricas
+$tRubInfo = "rubrica_info";
+$tRubInfoCalif = "rubrica_info_calif";
+$tRubDetCalif = "rubrica_detalles_calif";
+
 ?>
